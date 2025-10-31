@@ -1,9 +1,13 @@
-# IN PET • Báo giá Pro — Dark Neon v3.3 (Drive DB Ready)
+# IN PET • Báo giá Pro — Dark Neon v3.4 (Drive DB + Layout)
 
 - Giao diện Dark + Neon, xuất PNG/PDF có Watermark.
-- CRUD đơn hàng (localStorage) + upload ảnh đính kèm.
-- Kết nối Google Drive bằng Apps Script (đã điền sẵn URL của bạn).
-- Tab **Kho đơn hàng (Drive)**: liệt kê, mở & nhập đơn từ backup JSON mới nhất.
+- CRUD đơn hàng + bảng Layout (Nhí/Đại/Khác), tự tính Tổng mét & Tổng tiền.
+- Kết nối Google Drive (Apps Script) với **fetch không preflight** (`text/plain`) để tránh lỗi CORS/Failed to fetch.
+- Tabs: Soạn báo giá / Tệp đã tạo (đồng bộ Drive) / Kho đơn hàng (Drive) / Cài đặt.
 
 ## Deploy
-- Chỉ cần upload **index.html** này lên GitHub Pages / Netlify / Vercel là chạy.
+- Upload `index.html` lên GitHub Pages/Netlify/Vercel.
+- Trong tab **Cài đặt**, thay `Google Web App URL` nếu cần.
+
+## Apps Script tối thiểu (server)
+- Dùng phiên bản server có endpoint: `ping`, `saveOrderJson`, `saveFile`, `listFiles`, `listOrders`, `getFileJson`.
