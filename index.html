@@ -2,238 +2,451 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>IN PET • Báo giá Pro — Dark Neon v3.4 • Drive DB</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IN PET • Báo giá Pro — Dark Neon v3.5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0f14;--panel:#0e1218;--line:#1f2937;--text:#e5f2ff;--neon:#41ffd9;--neon2:#00e6ff;--pill:#141c28}
-*{box-sizing:border-box} html,body{height:100%} body{margin:0;color:var(--text);
-background:radial-gradient(1200px 800px at 10% -10%, rgba(0,210,255,.06), transparent 55%),radial-gradient(900px 600px at 110% 10%, rgba(0,255,210,.06), transparent 60%),var(--bg);
-font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-.wrap{max-width:1100px;margin:24px auto;padding:0 16px 48px}
-.hdr{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(11,15,20,.95),rgba(11,15,20,.85));backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-.hdr .inner{max-width:1100px;margin:auto;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
-.brand{display:flex;gap:10px;align-items:center} .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#00151a;display:grid;place-items:center;font-weight:800}
-.tabs{display:flex;gap:8px;background:var(--pill);padding:4px;border-radius:12px;border:1px solid var(--line)}
-.tab{padding:8px 12px;border-radius:10px;cursor:pointer;color:#b9c7e6;user-select:none} .tab.active{background:var(--panel);color:var(--text);box-shadow:0 0 0 1px var(--line) inset}
-.grid{display:grid;gap:14px;grid-template-columns:1fr 1fr} @media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.card h3{margin:0 0 10px 0;font-size:18px}
-.row{display:grid;gap:10px;grid-template-columns:160px 1fr;align-items:center}
-input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;background:#0c121a;color:var(--text);border:1px solid #1a2a3a;outline:none;transition:.2s;font-size:14px}
-input:focus,textarea:focus,select:focus{border-color:var(--neon2);box-shadow:0 0 0 3px rgba(0,230,255,.12)} input::placeholder,textarea::placeholder{color:#7f90a8}
-.btns{display:flex;gap:8px;flex-wrap:wrap} .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#0c121a;color:#e9f5ff;cursor:pointer}
-.btn.primary{background:linear-gradient(180deg,var(--neon),var(--neon2));color:#00141a;font-weight:700;border:none} .btn.danger{background:#1b0f12;border-color:#3b1a22;color:#ffb6c1}
-.kpi{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;color:#9db0cc;font-size:13px} .kpi b{color:var(--text)}
-.small{font-size:12px;color:#8ea2c3} footer{margin-top:28px;color:#7f90a8;font-size:12px;text-align:center}
-.list{display:flex;flex-direction:column;gap:10px} .item{display:flex;justify-content:space-between;padding:12px;background:#0c121a;border:1px solid #172333;border-radius:10px}
-.table{display:grid;grid-template-columns:160px 110px 120px 100px 110px 110px 120px 150px;gap:8px;align-items:center}
-.th{opacity:.8} .cell input,.cell select{width:100%;padding:8px;border-radius:8px;border:1px solid #1a2a3a;background:#0c121a;color:#e5f2ff}
-.cell .btn{padding:6px 10px}
+:root{
+  --bg:#0b0f14; --panel:#10151d; --panel2:#0f141b;
+  --text:#d9e2ef; --muted:#8aa0b6; --line:#1f2835;
+  --brand:#00e0ff; --brand2:#23ffd2; --danger:#ff5470; --ok:#00ff99;
+  --shadow: 0 10px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(35,255,210,.05);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text); background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(0,224,255,.14), transparent 60%),
+    radial-gradient(1200px 600px at 100% 10%, rgba(35,255,210,.08), transparent 55%),
+    var(--bg);
+}
+header{
+  position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
+  background: linear-gradient(180deg, rgba(11,15,20,.9), rgba(11,15,20,.55) 70%, transparent);
+  border-bottom:1px solid var(--line); padding:14px 16px;
+  display:flex; align-items:center; gap:10px;
+}
+.badge{width:36px;height:36px;border-radius:10px;background:#061723;display:grid;place-items:center;
+  color:#0ff;font-weight:800;box-shadow:0 0 0 1px rgba(35,255,210,.25), inset 0 -6px 16px rgba(0,224,255,.15);}
+h1{font-size:18px;margin:0;font-weight:700}
+small{color:var(--muted);font-weight:500}
+nav{margin-left:auto; display:flex; gap:6px}
+nav button{
+  background:linear-gradient(180deg,#0f1621,#0d141d);
+  border:1px solid var(--line); color:var(--text); padding:8px 12px; border-radius:10px;
+  cursor:pointer; font-weight:600
+}
+nav button.active{border-color:#1d2c3b; box-shadow:0 0 0 1px rgba(0,224,255,.25), 0 6px 20px rgba(0,224,255,.1); color:#bffcff}
+.wrap{max-width:1180px;margin:22px auto;padding:0 16px;display:grid;gap:18px}
+
+.card{
+  background:linear-gradient(180deg, var(--panel), var(--panel2));
+  border:1px solid var(--line); border-radius:16px; box-shadow: var(--shadow);
+  padding:16px;
+}
+
+.row-grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+label{font-size:12px;color:var(--muted); display:block; margin-bottom:6px}
+input,select,textarea{
+  width:100%; background:#0b1119; color:var(--text);
+  border:1px solid #1b2736; border-radius:12px; padding:10px 12px; outline:none;
+  box-shadow: inset 0 0 0 1px rgba(0,224,255,.0);
+}
+input:focus,select:focus,textarea:focus{border-color:#203144; box-shadow:0 0 0 1px rgba(0,224,255,.25), inset 0 0 0 1px rgba(0,224,255,.15)}
+input[readonly]{opacity:.9; background:#0a0f16}
+
+.btn{
+  background:linear-gradient(180deg, #0be, #06a);
+  color:#001015; font-weight:800; border:none; border-radius:12px; padding:10px 16px; cursor:pointer
+}
+.btn.gray{background:linear-gradient(180deg,#121a26,#0f1621); color:#cfe8ff; border:1px solid #1f2a38}
+.btn.red{background:linear-gradient(180deg,#ff6b8a,#ff5470); color:white}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+
+.tag{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid #203144; background:#0b1119}
+hr{border:0; border-top:1px dashed #1f2a38; margin:10px 0 6px}
+
+.row{
+  display:grid; grid-template-columns: 1.2fr .8fr .65fr .65fr .65fr .65fr .65fr .9fr 1fr 32px;
+  gap:8px; align-items:center; padding:8px; background:#0c121a; border:1px solid #1b2736; border-radius:12px;
+}
+.row input, .row select{height:38px}
+.row .del{display:grid;place-items:center;border-radius:10px;background:#0f1621;border:1px solid #2a3647;color:#9fb3c9;cursor:pointer}
+.totalbar{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+
+.notice{font-size:12px; color:#a9bfd6}
+
+.footer{padding:20px 0 40px; text-align:center; color:#7ea0b3}
+.hl{color:#9afcff}
 </style>
 </head>
 <body>
-<div class="hdr"><div class="inner">
-  <div class="brand"><div class="logo">PH</div><div><div style="font-weight:800">IN PET • Báo giá Pro</div><div class="small">Dark Neon v3.4 · Watermark · Drive DB</div></div></div>
-  <div class="tabs">
-    <div class="tab active" data-tab="compose">Soạn báo giá</div>
-    <div class="tab" data-tab="files">Tệp đã tạo</div>
-    <div class="tab" data-tab="drive">Kho đơn hàng (Drive)</div>
-    <div class="tab" data-tab="settings">Cài đặt</div>
+<header>
+  <div class="badge">PH</div>
+  <div>
+    <h1>IN PET • Báo giá Pro</h1>
+    <small>Dark Neon v3.5 • Watermark • Drive DB</small>
   </div>
-</div></div>
+  <nav>
+    <button class="tabbtn active" data-tab="compose">Soạn báo giá</button>
+    <button class="tabbtn" data-tab="settings">Cài đặt</button>
+  </nav>
+</header>
 
 <div class="wrap">
-  <section class="tab-panel" id="tab-compose">
-    <div class="grid">
-      <div class="card">
-        <h3>Khách hàng & Thiết lập</h3>
-        <div class="row"><label>Tên KH</label><input id="customer" placeholder="vd. CHI PHUONG"/></div>
-        <div class="row"><label>Mã KH</label><input id="customerCode" placeholder="vd. DECAL"/></div>
-        <div class="row"><label>Đơn giá /m (VND)</label><input id="unitPrice" type="number" value="150000"/></div>
-        <div class="row"><label>Phí thiết kế</label><input id="designFee" type="number" value="0"/></div>
-        <div class="row"><label>Phí vận chuyển</label><input id="shippingFee" type="number" value="0"/></div>
-        <div class="row"><label>Ghi chú</label><textarea id="note" rows="3" placeholder="Ghi chú in PET..."></textarea></div>
-        <div class="btns" style="margin-top:10px">
-          <button class="btn primary" id="btnSave">Lưu đơn</button>
-          <button class="btn" id="btnDuplicate">Nhân bản</button>
-          <button class="btn danger" id="btnDelete">Xoá</button>
+
+  <!-- Compose -->
+  <section id="tab-compose" class="card">
+    <div class="row-grid">
+      <div class="card" style="padding:12px">
+        <div class="row-grid">
+          <div>
+            <label>Tên KH</label>
+            <input id="customerName" placeholder="Tên khách hàng">
+          </div>
+          <div>
+            <label>Mã KH</label>
+            <input id="customerCode" placeholder="VD: CHI-PHUONG">
+          </div>
         </div>
-        <div class="kpi small" id="kpi"></div>
-      </div>
-      <div class="card">
-        <h3>Tệp đính kèm</h3>
-        <div class="btns">
-          <label class="btn"><input type="file" id="addImage" multiple accept="image/*" style="display:none">+ Thêm ảnh</label>
-          <button class="btn" id="btnClearImages">Xoá toàn bộ ảnh</button>
+
+        <div class="row-grid" style="margin-top:10px">
+          <div>
+            <label>Mã hàng in (thư mục & tên file)</label>
+            <input id="productCode" placeholder="VD: DECAL-CHU-CUTE">
+          </div>
+          <div>
+            <label>Đơn giá / mét (VND)</label>
+            <input id="unitPrice" type="number" inputmode="decimal" value="150000">
+          </div>
         </div>
-        <div id="thumbs" class="list" style="margin-top:10px"></div>
-        <div class="btns" style="margin-top:10px">
-          <label class="small"><input type="checkbox" id="wm" checked> Chèn watermark khi xuất</label>
-          <button class="btn" id="btnPNG">Tải PNG</button>
-          <button class="btn" id="btnPDF">Tải PDF</button>
+
+        <div class="row-grid" style="margin-top:10px">
+          <div>
+            <label>Phí thiết kế (VND)</label>
+            <input id="designFee" type="number" inputmode="decimal" value="0">
+          </div>
+          <div>
+            <label>Phí vận chuyển (VND)</label>
+            <input id="shippingFee" type="number" inputmode="decimal" value="0">
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label>Ghi chú</label>
+          <textarea id="note" rows="3" placeholder="Ghi chú in PET..."></textarea>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
+          <button class="btn" id="btnSaveJson">Lưu đơn (backup JSON lên Drive)</button>
+          <button class="btn gray" id="btnExportPNG">Tải PNG + Lưu Drive</button>
+          <button class="btn gray" id="btnExportPDF">Tải PDF + Lưu Drive</button>
+          <span class="tag"><input id="wm" type="checkbox" checked> Chèn watermark khi xuất</span>
         </div>
       </div>
-    </div>
 
-    <div class="card" style="margin-top:14px">
-      <h3>Chi tiết layout</h3>
-      <div class="btns" style="margin-bottom:8px">
-        <button class="btn" id="btnAddNhi">+ Nhí 8cm (16 hình / 0.31m)</button>
-        <button class="btn" id="btnAddDai">+ Đại 9cm (13 hình / 0.39m)</button>
-        <button class="btn" id="btnAddRow">+ Thêm hàng</button>
+      <div class="card" style="padding:12px">
+        <div class="notice">Tệp đính kèm sẽ tự lưu vào Drive dưới thư mục <b>Mã hàng in</b> khi bạn xuất PNG/PDF.</div>
       </div>
-      <div id="rows"></div>
-      <div class="kpi small" id="sum"></div>
+    </div>
+
+    <hr/>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px">
+      <button class="btn gray" id="btnAddNhi">+ Nhí 8cm (16 hình / 0.31m)</button>
+      <button class="btn gray" id="btnAddDai">+ Đại 9cm (13 hình / 0.39m)</button>
+      <button class="btn gray" id="btnAddRow">+ Thêm hàng</button>
+    </div>
+
+    <div id="rows"></div>
+
+    <hr/>
+
+    <div class="totalbar">
+      <div class="tag">Tổng lần in: <b style="margin-left:6px" id="sum-runs">0 lần</b></div>
+      <div class="tag">Tổng mét: <b style="margin-left:6px" id="sum-m">0 m</b></div>
+      <div class="tag">Tổng tiền: <b style="margin-left:6px" id="sum-money">0đ</b></div>
     </div>
   </section>
 
-  <section class="tab-panel" id="tab-files" style="display:none">
-    <div class="card"><h3>Tệp đã tạo cho đơn này</h3>
-      <div class="btns"><button class="btn" id="btnSyncDrive">↻ Đồng bộ Drive</button></div>
-      <div id="fileList" class="list" style="margin-top:10px"></div>
+  <!-- Settings -->
+  <section id="tab-settings" class="card" style="display:none">
+    <div class="row-grid">
+      <div>
+        <label>Google Web App URL (/exec)</label>
+        <input id="apiUrl" placeholder="https://script.google.com/macros/s/....../exec">
+      </div>
+      <div>
+        <label>SECRET (tuỳ chọn)</label>
+        <input id="apiSecret" placeholder="để trống nếu không dùng">
+      </div>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button class="btn" id="btnSaveCfg">Lưu cài đặt</button>
+      <button class="btn gray" id="btnPing">Kiểm tra kết nối</button>
+    </div>
+    <div class="notice" style="margin-top:8px">
+      URL này được lưu vào trình duyệt (localStorage). Hãy đảm bảo bạn đã triển khai Apps Script ở chế độ <b class="hl">Anyone</b> và dùng link <b class="hl">/exec</b>.
     </div>
   </section>
 
-  <section class="tab-panel" id="tab-drive" style="display:none">
-    <div class="card"><h3>Kho đơn hàng (Drive)</h3>
-      <div class="btns"><button class="btn" id="btnLoadOrders">↻ Tải danh sách</button></div>
-      <div id="driveOrders" class="list" style="margin-top:10px"></div>
-    </div>
-  </section>
-
-  <section class="tab-panel" id="tab-settings" style="display:none">
-    <div class="card"><h3>Cài đặt kết nối Drive</h3>
-      <div class="row"><label>Google Web App URL</label><input id="apiUrl" placeholder="https://script.google.com/.../exec"/></div>
-      <div class="row"><label>SECRET (tuỳ chọn)</label><input id="apiSecret" placeholder="để trống nếu không dùng"/></div>
-      <div class="btns"><button class="btn primary" id="btnSaveCfg">Lưu cài đặt</button><button class="btn" id="btnTest">Kiểm tra kết nối</button></div>
-      <p class="small">URL mặc định đã cài sẵn cho kho Drive của bạn. Có thể đổi nếu cần.</p>
-    </div>
-  </section>
-
-  <footer>© INPETPHUCHOANG • Dark Neon + Watermark • Drive Database</footer>
+  <div class="footer">© INPETPHUCHOANG • Dark Neon + Watermark • Drive Database</div>
 </div>
 
+<!-- libs for export -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
 <script>
-const DEFAULT_API = "https://script.google.com/macros/s/AKfycbx10xK42FxwyO8UikdWcqAAinSz5FMj_SnCOWzMCVmr5G-5981pz2d004sl8Q2vYQmBLQ/exec";
-const $ = (s,r=document)=>r.querySelector(s);
-const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-const S=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)||'null'):localStorage.setItem(k,JSON.stringify(v));
-const N=v=>Math.max(0,Number(v||0)); const fmt=n=>n.toLocaleString('vi-VN');
+/* ====== Helpers ====== */
+const $ = sel => document.querySelector(sel);
+function num(x){ const v = parseFloat(String(x??'').replace(/[^\d.\-]/g,'')); return isNaN(v)?0:v; }
+function round2(v){ return Math.round(v*100)/100; }
+function ceilDiv(a,b){ a=num(a); b=num(b); return b>0?Math.ceil(a/b):0; }
+function VND(n){ return (n||0).toLocaleString('vi-VN'); }
+function todayStamp(){ return new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'); }
 
-// Tabs
-$$('.tab').forEach(t=>t.addEventListener('click',()=>{
-  $$('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
-  $$('.tab-panel').forEach(p=>p.style.display='none'); $('#tab-'+t.dataset.tab).style.display='block';
-}));
+/* ====== State ====== */
+const state = {
+  cfg: { apiUrl:'', secret:'' },
+  order: {
+    customerName:'', customerCode:'', productCode:'',
+    unitPrice:150000, designFee:0, shippingFee:0, note:''
+  },
+  rows:[]
+};
 
-let state=S('inpet_state')||{orders:[],activeId:null};
-function persist(){S('inpet_state',state); renderKPI();}
-function activeOrder(){return state.orders.find(o=>o.id===state.activeId)||null}
-function newId(){return 'od-'+Math.random().toString(36).slice(2,10)}
+function loadState(){
+  try{
+    const s = JSON.parse(localStorage.getItem('inpet_state')||'null');
+    const c = JSON.parse(localStorage.getItem('inpet_cfg')||'null');
+    if (s) Object.assign(state, s);
+    if (c) state.cfg = c;
+  }catch(e){}
+}
+function saveState(){
+  localStorage.setItem('inpet_state', JSON.stringify({order:state.order, rows:state.rows}));
+  localStorage.setItem('inpet_cfg', JSON.stringify(state.cfg));
+}
 
-function bindInputs(){
-  ['customer','customerCode','unitPrice','designFee','shippingFee','note'].forEach(id=>{
-    $('#'+id).addEventListener('input',e=>{const o=activeOrder(); if(!o)return; o.data[id]=e.target.value; persist();});
+function bindBasics(){
+  $('#customerName').value = state.order.customerName||'';
+  $('#customerCode').value = state.order.customerCode||'';
+  $('#productCode').value  = state.order.productCode||'';
+  $('#unitPrice').value    = state.order.unitPrice||150000;
+  $('#designFee').value    = state.order.designFee||0;
+  $('#shippingFee').value  = state.order.shippingFee||0;
+  $('#note').value         = state.order.note||'';
+
+  ['customerName','customerCode','productCode','unitPrice','designFee','shippingFee','note'].forEach(id=>{
+    $('#'+id).addEventListener('input', ()=>{
+      const v = $('#'+id).value;
+      if (id==='unitPrice'||id==='designFee'||id==='shippingFee') state.order[id]=num(v);
+      else state.order[id]=v;
+      recalcAll(); saveState();
+    });
+  });
+
+  $('#apiUrl').value    = state.cfg.apiUrl||'';
+  $('#apiSecret').value = state.cfg.secret||'';
+}
+
+function addRow(data){
+  const idx = state.rows.length;
+  const row = Object.assign({
+    name:'', group:'', color:'#ffffff',
+    mPerRun:'', imgPerRun:'', demand:'',
+    runs:0, totalM:0, money:0
+  }, data||{});
+  state.rows.push(row);
+
+  const $wrap = document.createElement('div');
+  $wrap.className='row';
+  $wrap.dataset.row=idx;
+  $wrap.innerHTML = `
+    <input class="name" placeholder="Tên mặt hàng">
+    <select class="group"><option value="nhí">nhí</option><option value="đại">đại</option><option value="khác">khác</option></select>
+    <input class="color" type="color" value="${row.color}">
+    <input class="m-per-run" type="number" step="0.001" placeholder="m/1 lần">
+    <input class="img-per-run" type="number" step="1" placeholder="hình/1 lần">
+    <input class="demand" type="number" step="1" placeholder="nhu cầu (hình)">
+    <input class="runs" type="number" readonly>
+    <input class="totalm" type="text" readonly>
+    <input class="money" type="text" readonly>
+    <div class="del">✕</div>
+  `;
+  $('#rows').appendChild($wrap);
+
+  const setVal = (cls,val)=>$wrap.querySelector(cls).value = (val??'');
+  setVal('.name', row.name);
+  setVal('.group', row.group||'nhí');
+  setVal('.m-per-run', row.mPerRun);
+  setVal('.img-per-run', row.imgPerRun);
+  setVal('.demand', row.demand);
+
+  ['.name','.group','.color','.m-per-run','.img-per-run','.demand'].forEach(sel=>{
+    $wrap.querySelector(sel).addEventListener('input', e=>{
+      const v = e.target.value;
+      if (sel==='.name') row.name=v;
+      if (sel==='.group') row.group=v;
+      if (sel==='.color') row.color=v;
+      if (sel==='.m-per-run') row.mPerRun=v;
+      if (sel==='.img-per-run') row.imgPerRun=v;
+      if (sel==='.demand') row.demand=v;
+      recalcAll(); saveState();
+    });
+  });
+
+  $wrap.querySelector('.del').addEventListener('click', ()=>{
+    state.rows.splice(idx,1);
+    $('#rows').innerHTML='';
+    const copy = JSON.parse(JSON.stringify(state.rows));
+    state.rows=[];
+    copy.forEach(r=>addRow(r));
+    recalcAll(); saveState();
+  });
+
+  recalcAll();
+}
+
+function calcRow(row){
+  const mPerRun   = num(row.mPerRun);
+  const imgPerRun = Math.max(1, Math.floor(num(row.imgPerRun)));
+  const demand    = Math.max(0, Math.floor(num(row.demand)));
+  const runs   = imgPerRun ? Math.ceil(demand / imgPerRun) : 0;
+  const totalM = round2(runs * mPerRun);
+  const money  = Math.round(totalM * num(state.order.unitPrice||0));
+  row.runs=runs; row.totalM=totalM; row.money=money;
+  return row;
+}
+
+function recalcAll(){
+  let sumRuns=0, sumM=0, sumMoney=0;
+  state.rows.forEach((row,idx)=>{
+    calcRow(row);
+    const $r = document.querySelector(`.row[data-row="${idx}"]`);
+    if ($r){
+      $r.querySelector('.runs').value = row.runs;
+      $r.querySelector('.totalm').value = row.totalM;
+      $r.querySelector('.money').value = VND(row.money);
+    }
+    sumRuns += row.runs; sumM += row.totalM; sumMoney += row.money;
+  });
+  sumM = round2(sumM);
+  sumMoney = sumMoney + num(state.order.designFee) + num(state.order.shippingFee);
+  $('#sum-runs').textContent = sumRuns + ' lần';
+  $('#sum-m').textContent = sumM + ' m';
+  $('#sum-money').textContent = VND(sumMoney) + 'đ';
+}
+
+function bindActions(){
+  $('#btnAddNhi').addEventListener('click', ()=>addRow({group:'nhí', mPerRun:0.31, imgPerRun:16, demand:0}));
+  $('#btnAddDai').addEventListener('click', ()=>addRow({group:'đại', mPerRun:0.39, imgPerRun:13, demand:0}));
+  $('#btnAddRow').addEventListener('click', ()=>addRow({group:'khác'}));
+
+  $('#btnSaveCfg').addEventListener('click', ()=>{
+    state.cfg.apiUrl = $('#apiUrl').value.trim();
+    state.cfg.secret = $('#apiSecret').value.trim();
+    saveState(); alert('Đã lưu cài đặt.');
+  });
+  $('#btnPing').addEventListener('click', async ()=>{
+    const ok = await apiCall({type:'ping'});
+    alert('Kết nối: ' + JSON.stringify(ok));
+  });
+
+  $('#btnSaveJson').addEventListener('click', async ()=>{
+    const orderId = (state.order.productCode||'order').trim();
+    const res = await apiCall({type:'saveOrderJson', orderId, data: state});
+    alert(res && res.ok ? 'Đã lưu JSON lên Drive' : ('Lỗi: '+(res?.error||'không kết nối')));
+  });
+
+  $('#btnExportPNG').addEventListener('click', ()=>exportImage('png'));
+  $('#btnExportPDF').addEventListener('click', ()=>exportImage('pdf'));
+
+  document.querySelectorAll('.tabbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.style.display='none');
+      $('#tab-'+tab).style.display='block';
+    });
   });
 }
-bindInputs();
 
-function renderKPI(){
-  const o=activeOrder(); if(!o){$('#kpi').innerHTML='Chưa có đơn'; $('#rows').innerHTML=''; $('#sum').innerHTML=''; return;}
-  $('#kpi').innerHTML=`Mã: <b>${o.data.customerCode||'-'}</b> • Khách: <b>${o.data.customer||'-'}</b> • Giá/m: <b>${fmt(N(o.data.unitPrice))}đ</b>`;
-  const el=$('#thumbs'); el.innerHTML='';
-  for(const img of (o.images||[])){
-    const row=document.createElement('div');row.className='item';
-    row.innerHTML=`<span>${img.name}</span><span class="btns"><a class="btn small" href="${img.dataUrl}" download="${img.name}">Tải</a><button class="btn danger small">X</button></span>`;
-    row.querySelector('button').onclick=()=>{o.images=o.images.filter(x=>x!==img); persist(); renderKPI();};
-    el.appendChild(row);
+async function exportImage(kind){
+  const target = document.querySelector('#tab-compose');
+  const stamp = todayStamp();
+  const code = (state.order.productCode||'ORDER').trim() || 'ORDER';
+  const customer = (state.order.customerCode||'KH').trim() || 'KH';
+  const name = `${code}__${customer}__${stamp}.${kind==='pdf'?'pdf':'png'}`;
+
+  // watermark toggle
+  let wm = null;
+  if ($('#wm').checked){
+    wm = document.createElement('div');
+    wm.textContent = 'INPETPHUCHOANG';
+    wm.style.cssText='position:fixed;inset:0;pointer-events:none;opacity:.07;font-weight:800;font-size:80px;color:#00e0ff;display:grid;place-items:center;transform:rotate(-20deg)';
+    document.body.appendChild(wm);
   }
-  renderRows();
+
+  const canvas = await html2canvas(target, {backgroundColor:'#0b0f14', scale:2});
+  if (wm) wm.remove();
+
+  if (kind==='png'){
+    const dataUrl = canvas.toDataURL('image/png', 1);
+    downloadDataUrl(dataUrl, name);
+    await apiCall({type:'saveFile', orderId: code, name, dataUrl});
+  } else {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p','pt','a4');
+    const pageW = pdf.internal.pageSize.getWidth();
+    const imgW = pageW-40, imgH = canvas.height * (imgW/canvas.width);
+    pdf.addImage(canvas.toDataURL('image/jpeg', 1), 'JPEG', 20, 20, imgW, imgH);
+    pdf.save(name);
+    const dataUrl = canvas.toDataURL('image/jpeg', 1);
+    await apiCall({type:'saveFile', orderId: code, name: name.replace('.pdf','.jpg'), dataUrl});
+  }
 }
 
-function newOrder(){
-  const id=newId();
-  state.orders.unshift({id,created:Date.now(),data:{customer:'',customerCode:'',unitPrice:150000,designFee:0,shippingFee:0,note:''},images:[],rows:[]});
-  state.activeId=id; persist(); loadToForm(); alert('Đã tạo đơn mới');
-}
-function duplicateOrder(){const o=activeOrder(); if(!o)return; const c=JSON.parse(JSON.stringify(o)); c.id=newId(); c.created=Date.now(); state.orders.unshift(c); state.activeId=c.id; persist(); loadToForm();}
-function deleteOrder(){if(!activeOrder())return; if(!confirm('Xoá đơn hiện tại?'))return; state.orders=state.orders.filter(o=>o.id!==state.activeId); state.activeId=state.orders[0]?.id||null; persist(); loadToForm();}
-
-function loadToForm(){
-  const o=activeOrder(); if(!o){['customer','customerCode','unitPrice','designFee','shippingFee','note'].forEach(id=>$('#'+id).value=''); return;}
-  $('#customer').value=o.data.customer||''; $('#customerCode').value=o.data.customerCode||'';
-  $('#unitPrice').value=o.data.unitPrice||0; $('#designFee').value=o.data.designFee||0; $('#shippingFee').value=o.data.shippingFee||0; $('#note').value=o.data.note||'';
-  renderKPI();
+function downloadDataUrl(dataUrl, filename){
+  const a = document.createElement('a'); a.href=dataUrl; a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
 }
 
-$('#btnSave').onclick=()=>{ if(!activeOrder()) newOrder(); else {persist(); alert('Đã lưu đơn');} };
-$('#btnDuplicate').onclick=duplicateOrder; $('#btnDelete').onclick=deleteOrder;
+/* ====== API ====== */
+async function apiCall(payload){
+  try{
+    const url = (state.cfg.apiUrl||'').trim();
+    if (!url){ throw new Error('Chưa thiết lập API URL'); }
+    const body = Object.assign({}, payload, { secret: state.cfg.secret||'' });
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify(body)
+    });
+    return await res.json();
+  }catch(err){
+    console.error('api error', err); return { ok:false, error:String(err) };
+  }
+}
 
-$('#addImage').addEventListener('change',async e=>{
-  const files=Array.from(e.target.files||[]); const o=activeOrder(); if(!o)return;
-  for(const f of files){const b=await f.arrayBuffer(); const base=btoa(String.fromCharCode(...new Uint8Array(b))); const dataUrl=`data:${f.type};base64,${base}`; o.images.push({name:f.name,dataUrl});}
-  persist(); renderKPI();
+/* ====== Init ====== */
+loadState();
+document.addEventListener('DOMContentLoaded', ()=>{
+  bindBasics(); bindActions();
+  // render rows
+  if (!state.rows || !state.rows.length){
+    addRow({group:'nhí', mPerRun:0.31, imgPerRun:16, demand:0});
+  }else{
+    const copy = JSON.parse(JSON.stringify(state.rows));
+    state.rows=[]; copy.forEach(r=>addRow(r));
+  }
+  recalcAll();
 });
-$('#btnClearImages').onclick=()=>{const o=activeOrder(); if(!o)return; o.images=[]; persist(); renderKPI();};
 
-// Layout table
-function ensureRows(){const o=activeOrder(); if(!o)return; if(!Array.isArray(o.rows)) o.rows=[];}
-function addRow(preset){const o=activeOrder(); if(!o)return; ensureRows(); const base={name:'',group:'nhi',color:'#00e6ff',mPerRun:0.31,imgPerRun:16,demand:0,totalM:0,money:0}; if(preset==='dai'){base.group='dai'; base.mPerRun=0.39; base.imgPerRun=13;} o.rows.push(base); persist(); renderRows();}
-function delRow(i){const o=activeOrder(); if(!o)return; o.rows.splice(i,1); persist(); renderRows();}
-function recalc(){const o=activeOrder(); if(!o)return; const unit=N(o.data.unitPrice); let tm=0, money=0; (o.rows||[]).forEach(r=>{r.totalM=N(r.mPerRun)*N(r.demand); r.money=r.totalM*unit; tm+=r.totalM; money+=r.money;}); $('#sum').innerHTML=`Tổng mét: <b>${tm.toFixed(2)} m</b> • Tổng tiền: <b>${fmt(money)}đ</b>`;}
-function renderRows(){
-  const o=activeOrder(); if(!o) return; ensureRows(); recalc();
-  const wrap=document.createElement('div'); wrap.className='table';
-  const head=['Tên','Nhóm','Màu','m/1 lần','hình/1 lần','Nhu cầu','Tổng m','Tiền'];
-  head.forEach(h=>{const d=document.createElement('div'); d.className='th'; d.textContent=h; wrap.appendChild(d);});
-  (o.rows||[]).forEach((r,i)=>{
-    const mk=h=>{const d=document.createElement('div'); d.className='cell'; d.innerHTML=h; return d;};
-    wrap.appendChild(mk(`<input value="${r.name}" placeholder="Tên mặt hàng" oninput="(function(v){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows[${i}].name=v; localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value);"/>`));
-    wrap.appendChild(mk(`<select onchange="(function(v){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows[${i}].group=v; localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value);">
-      <option value="nhi" ${r.group==='nhi'?'selected':''}>nhí</option>
-      <option value="dai" ${r.group==='dai'?'selected':''}>đại</option>
-      <option value="khac" ${r.group==='khac'?'selected':''}>khác</option>
-    </select>`));
-    wrap.appendChild(mk(`<input type="color" value="${r.color}" onchange="(function(v){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows[${i}].color=v; localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value);"/>`));
-    wrap.appendChild(mk(`<input type="number" value="${r.mPerRun}" step="0.01" oninput="(function(v){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows[${i}].mPerRun=Number(v)||0; localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value);"/>`));
-    wrap.appendChild(mk(`<input type="number" value="${r.imgPerRun}" oninput="(function(v){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows[${i}].imgPerRun=Number(v)||0; localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value);"/>`));
-    wrap.appendChild(mk(`<input type="number" value="${r.demand}" oninput="(function(v){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows[${i}].demand=Number(v)||0; localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value);"/>`));
-    wrap.appendChild(mk(`<div>${(r.totalM||0).toFixed(2)}</div>`));
-    wrap.appendChild(mk(`<div>${fmt(r.money||0)} <button class="btn danger" onclick="(function(){const st=JSON.parse(localStorage.getItem('inpet_state')); const a=st.orders.find(x=>x.id==='${state.activeId}'); a.rows.splice(${i},1); localStorage.setItem('inpet_state',JSON.stringify(st));})(this.value); location.reload();">X</button></div>`));
-  });
-  $('#rows').innerHTML=''; $('#rows').appendChild(wrap); recalc();
-}
-$('#btnAddNhi').onclick=()=>addRow('nhi'); $('#btnAddDai').onclick=()=>addRow('dai'); $('#btnAddRow').onclick=()=>addRow();
-
-// Watermark export
-function stampWatermark(canvas){if(!$('#wm').checked) return canvas; const ctx=canvas.getContext('2d'); ctx.save(); ctx.globalAlpha=.13; ctx.translate(canvas.width/2,canvas.height/2); ctx.rotate(-Math.PI/6); ctx.fillStyle='#00e6ff'; ctx.textAlign='center'; ctx.font='bold 64px Segoe UI'; ctx.fillText('INPET • PHUC HOANG',0,0); ctx.restore(); return canvas;}
-async function exportPNG(){const node=document.body; const canvas=await html2canvas(node,{scale:2,backgroundColor:null}); stampWatermark(canvas); const link=document.createElement('a'); link.download=(activeOrder()?.data.customerCode||'inpet')+'.png'; link.href=canvas.toDataURL('image/png'); link.click(); await uploadToDrive('png',link.download,link.href);}
-async function exportPDF(){const node=document.body; const canvas=await html2canvas(node,{scale:2,backgroundColor:'#ffffff'}); stampWatermark(canvas); const { jsPDF }=window.jspdf; const pdf=new jsPDF('p','pt','a4'); const w=pdf.internal.pageSize.getWidth(); const h=canvas.height*(w/canvas.width); pdf.addImage(canvas.toDataURL('image/png'),'PNG',0,0,w,h); const name=(activeOrder()?.data.customerCode||'inpet')+'.pdf'; pdf.save(name); await uploadToDrive('pdf',name,canvas.toDataURL('image/png'));}
-$('#btnPNG').onclick=exportPNG; $('#btnPDF').onclick=exportPDF;
-
-// Config + fetch no-preflight
-function cfg(){return S('inpet_cfg')||{api:DEFAULT_API,token:''}} function setCfg(v){S('inpet_cfg',v)}
-$('#apiUrl').value=(S('inpet_cfg')?.api)||DEFAULT_API; $('#apiSecret').value=(S('inpet_cfg')?.token)||'';
-$('#btnSaveCfg').onclick=()=>{setCfg({api:$('#apiUrl').value.trim()||DEFAULT_API,token:$('#apiSecret').value.trim()}); alert('Đã lưu cấu hình');};
-async function postJSON(payload){return fetch(cfg().api,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(payload)}).then(r=>r.json()).catch(e=>({ok:false,error:String(e)}));}
-$('#btnTest').onclick=async()=>{const r=await postJSON({type:'ping',token:cfg().token}); alert('Kết nối: '+JSON.stringify(r));};
-
-async function uploadToDrive(kind,filename,dataUrl){const o=activeOrder(); if(!o)return;
-  await postJSON({type:'saveOrderJson',token:cfg().token,orderId:o.data.customerCode||o.id,data:o});
-  const res=await postJSON({type:'saveFile',token:cfg().token,orderId:o.data.customerCode||o.id,name:filename,dataUrl});
-  if(res?.ok) alert('Đã lưu lên Drive: '+res.name); await refreshFilesList(); }
-
-async function refreshFilesList(){const o=activeOrder(); if(!o){$('#fileList').innerHTML=''; return;} const orderId=o.data.customerCode||o.id; const res=await postJSON({type:'listFiles',token:cfg().token,orderId}); const box=$('#fileList'); box.innerHTML=''; if(!res?.ok){box.innerHTML='<div class="small">Không tải được từ Drive.</div>'; return;} res.files.forEach(f=>{const row=document.createElement('div'); row.className='item'; row.innerHTML=`<span>${f.name}</span><span class="btns"><a href="${f.url}" class="btn small" target="_blank">Tải</a></span>`; box.appendChild(row);}); }
-
-$('#btnSyncDrive').onclick=refreshFilesList;
-
-$('#btnLoadOrders').onclick=async()=>{const res=await postJSON({type:'listOrders',token:cfg().token}); const box=$('#driveOrders'); box.innerHTML=''; if(!res?.ok){box.innerHTML='<div class="small">Không tải được danh sách.</div>'; return;} res.items.forEach(it=>{const row=document.createElement('div'); row.className='item'; const latest = it.latestBackup ? `<span class="small">backup: ${it.latestBackup.name}</span>`:'<span class="small">chưa có backup</span>'; row.innerHTML=`<div><b>${it.orderId}</b><div class="small">${latest}</div></div><div class="btns"><a class="btn small" href="${it.folderUrl}" target="_blank">Mở thư mục</a><button class="btn small">Mở & nhập</button></div>`; row.querySelector('button').onclick=async()=>{ if(!it.latestBackup) return alert('Chưa có backup JSON'); const j=await postJSON({type:'getFileJson',token:cfg().token,fileId:it.latestBackup.id}); if(!j?.ok||!j?.json) return alert('Không đọc được JSON'); const d=j.json; d.id=newId(); d.created=Date.now(); state.orders.unshift(d); state.activeId=d.id; persist(); loadToForm(); alert('Đã nhập đơn từ Drive'); $$('.tab').forEach(x=>x.classList.remove('active')); $$('.tab')[0].classList.add('active'); $$('.tab-panel').forEach(p=>p.style.display='none'); $('#tab-compose').style.display='block'; }; box.appendChild(row);}); };
-
-// boot
-if(!state.activeId && state.orders.length) state.activeId=state.orders[0].id;
-if(!state.orders.length) newOrder(); else loadToForm();
 </script>
 </body>
 </html>
