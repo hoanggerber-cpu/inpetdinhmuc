@@ -36,22 +36,25 @@ input:focus,select:focus,textarea:focus{border-color:#244059;box-shadow:0 0 0 1p
 .tag{display:inline-flex;align-items:center;gap:8px;border:1px solid #203144;background:#0b1119;padding:6px 10px;border-radius:999px;font-size:13px}
 hr{border:0;border-top:1px dashed #1e2a3b;margin:10px 0}
 
-/* bảng hàng */
-.headrow,.row{display:grid;grid-template-columns:1.1fr .7fr .7fr .7fr .8fr .8fr .9fr 1fr 120px 36px;gap:8px;align-items:center}
+/* Bảng hàng – rộng hơn để dễ gõ */
+.headrow,.row{
+  display:grid;
+  grid-template-columns:1.2fr .8fr 1fr 1fr 1fr .9fr 1fr 1.1fr 140px 40px;
+  gap:10px; align-items:center; min-width:0;
+}
 .headrow{font-size:12px;color:#a5b7ce;padding:6px 8px}
-.row{padding:8px;background:#0c121a;border:1px solid #1b2736;border-radius:12px}
-.row input,.row select{height:38px}
+.row{padding:10px;background:#0c121a;border:1px solid #1b2736;border-radius:12px}
+.row input,.row select{height:40px;min-width:0}
 .row .del{display:grid;place-items:center;border-radius:10px;background:#0f1621;border:1px solid #2a3647;color:#9fb3c9;cursor:pointer}
-.thumb{width:100%;height:38px;border:1px dashed #2a3647;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 8px}
+.thumb{width:100%;height:40px;border:1px dashed #2a3647;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 8px}
 .thumb img{height:28px;border-radius:4px}
 .notice{font-size:12px;color:#9db2c8}
 section{display:none}
 section.act{display:block}
 
 /* ====== A4 QUOTE TEMPLATE (xuất PDF) ====== */
-#quoteA4{width:794px; /* A4: 595x842pt ~ 794x1123 css px */ min-height:1123px;background:#fff;color:#111;border:1px solid #ddd;margin:auto;padding:24px 22px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+#quoteA4{width:794px;min-height:1123px;background:#fff;color:#111;border:1px solid #ddd;margin:auto;padding:24px 22px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .q-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #ccc;padding-bottom:10px}
-.q-head b{font-size:20px}
 .q-sub{font-size:12px;color:#444}
 .q-title{font-weight:800;font-size:18px}
 .q-meta{font-size:12px;text-align:right}
@@ -89,11 +92,11 @@ section.act{display:block}
         </div>
         <div class="grid2" style="margin-top:10px">
           <div><label>Mã hàng (thư mục / tên file)</label><input id="maHang" placeholder="VD: DECAL-CHU-CUTE"/></div>
-          <div><label>Đơn giá / mét (VND)</label><input id="donGia" type="number" inputmode="decimal" value="150000"/></div>
+          <div><label>Đơn giá / mét (VND)</label><input id="donGia" type="text" inputmode="decimal" value="150000"/></div>
         </div>
         <div class="grid2" style="margin-top:10px">
-          <div><label>Phí thiết kế</label><input id="phiTk" type="number" value="0"/></div>
-          <div><label>Phí vận chuyển</label><input id="phiVc" type="number" value="0"/></div>
+          <div><label>Phí thiết kế</label><input id="phiTk" type="text" inputmode="decimal" value="0"/></div>
+          <div><label>Phí vận chuyển</label><input id="phiVc" type="text" inputmode="decimal" value="0"/></div>
         </div>
         <div style="margin-top:10px">
           <label>Ghi chú / Điều khoản</label>
@@ -124,22 +127,20 @@ section.act{display:block}
     </div>
   </section>
 
-  <!-- Cài đặt (để dành hook Drive sau này) -->
+  <!-- Cài đặt -->
   <section id="settings">
     <div class="card">
       <div class="grid2">
         <div><label>Ngày báo giá</label><input id="ngay" type="date"/></div>
         <div><label>SĐT/ID Khách</label><input id="sdt" placeholder="SĐT/ID"/></div>
       </div>
-      <div class="notice" style="margin-top:8px">Bạn có thể bổ sung Google Apps Script URL ở bản mở rộng (nếu muốn lưu Drive).</div>
+      <div class="notice" style="margin-top:8px">Có thể mở rộng kết nối Drive sau; hiện tại app hoạt động độc lập, xuất PDF tại chỗ.</div>
     </div>
   </section>
 
-  <!-- Preview khổ A4 để test trước khi xuất -->
+  <!-- Preview -->
   <section id="preview">
-    <div class="card">
-      <div id="quoteA4"></div>
-    </div>
+    <div class="card"><div id="quoteA4"></div></div>
   </section>
 </div>
 
@@ -148,8 +149,15 @@ section.act{display:block}
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
-const VND=n=>(n||0).toLocaleString('vi-VN');
-const num=x=>{const v=parseFloat(String(x??'').replace(/[^\d.\-]/g,''));return isNaN(v)?0:v}
+
+// ===== số & util =====
+const VND = n => (n||0).toLocaleString('vi-VN');
+const num = (x) => {                       // nhận cả 1,23 hoặc 1.23
+  if (x === undefined || x === null) return 0;
+  const s = String(x).replace(/,/g,'.').replace(/[^\d.\-]/g,'');
+  const v = parseFloat(s);
+  return isNaN(v)?0:v;
+};
 const ceil=(a,b)=>b>0?Math.ceil(a/b):0;
 const r2=v=>Math.round(v*100)/100;
 
@@ -158,16 +166,14 @@ const state={rows:[]};
 function addRow(preset){
   const r=Object.assign({name:'',group:'nhí',mPerRun:'',imgPerRun:'',demand:'',runs:0,totalM:0,money:0,image:''},preset||{});
   state.rows.push(r);
-  renderRows(); calc(); 
+  renderRows(); calc();
 }
 
-function onInputChange(el, r, key, toNumber=false){
-  el.addEventListener('input', e=>{
-    r[key]=toNumber?e.target.value:e.target.value;
-    calc();
-  });
+function fileToDataURL(file){
+  return new Promise(res=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file);});
 }
 
+// ===== render hàng (inputs type="text" để gõ thoải mái) =====
 function renderRows(){
   const box=$('#rows'); box.innerHTML='';
   state.rows.forEach((r,idx)=>{
@@ -177,12 +183,12 @@ function renderRows(){
       <select class="group">
         <option value="nhí">nhí</option><option value="đại">đại</option><option value="khác">khác</option>
       </select>
-      <input class="mpr" type="number" step="0.001" placeholder="m/1 lần" value="${r.mPerRun||''}"/>
-      <input class="ipr" type="number" step="1" placeholder="hình/1 lần" value="${r.imgPerRun||''}"/>
-      <input class="dem" type="number" step="1" placeholder="nhu cầu (hình)" value="${r.demand||''}"/>
-      <input class="runs" readOnly/>
-      <input class="tm" readOnly/>
-      <input class="money" readOnly/>
+      <input class="mpr" type="text" inputmode="decimal" placeholder="m/1 lần" value="${r.mPerRun||''}"/>
+      <input class="ipr" type="text" inputmode="numeric" placeholder="hình/1 lần" value="${r.imgPerRun||''}"/>
+      <input class="dem" type="text" inputmode="numeric" placeholder="nhu cầu (hình)" value="${r.demand||''}"/>
+      <input class="runs" readonly placeholder="—"/>
+      <input class="tm" readonly placeholder="—"/>
+      <input class="money" readonly placeholder="—"/>
       <label class="thumb">
         ${r.image?`<img src="${r.image}"/>`:`<span style="color:#7aa2c8">Chọn ảnh…</span>`}
         <input class="file" type="file" accept="image/*" style="display:none"/>
@@ -191,16 +197,17 @@ function renderRows(){
     `;
     box.appendChild(row);
     row.querySelector('.group').value=r.group;
-    onInputChange(row.querySelector('.name'), r, 'name');
-    row.querySelector('.group').addEventListener('input',e=>{r.group=e.target.value;calc()});
-    onInputChange(row.querySelector('.mpr'), r, 'mPerRun', true);
-    onInputChange(row.querySelector('.ipr'), r, 'imgPerRun', true);
-    onInputChange(row.querySelector('.dem'), r, 'demand', true);
+
+    row.querySelector('.name').addEventListener('input',e=>{ r.name=e.target.value; });
+    row.querySelector('.group').addEventListener('input',e=>{ r.group=e.target.value; calc(); });
+
+    row.querySelector('.mpr').addEventListener('input',e=>{ r.mPerRun=e.target.value; calc(); });
+    row.querySelector('.ipr').addEventListener('input',e=>{ r.imgPerRun=e.target.value; calc(); });
+    row.querySelector('.dem').addEventListener('input',e=>{ r.demand=e.target.value; calc(); });
 
     row.querySelector('.file').addEventListener('change', async e=>{
       const f=e.target.files?.[0]; if(!f) return;
-      const url=await fileToDataURL(f); r.image=url;
-      renderRows(); calc();
+      r.image=await fileToDataURL(f); renderRows(); calc();
     });
 
     row.querySelector('.del').addEventListener('click',()=>{
@@ -209,19 +216,20 @@ function renderRows(){
   });
 }
 
-function fileToDataURL(file){
-  return new Promise(res=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file);});
-}
-
+// ===== tính toán tổng =====
 function calc(){
   let sumRuns=0,sumM=0,sumMoney=0,sumImgs=0;
   const donGia=num($('#donGia').value);
   state.rows.forEach((r,i)=>{
-    const m=num(r.mPerRun), ipr=Math.max(1,Math.floor(num(r.imgPerRun))), dem=Math.max(0,Math.floor(num(r.demand)));
-    const runs=ceil(dem,ipr), totalM=r2(runs*m), money=Math.round(totalM*donGia);
+    const m=num(r.mPerRun);
+    const ipr=Math.max(1,Math.floor(num(r.imgPerRun)));
+    const dem=Math.max(0,Math.floor(num(r.demand)));
+    const runs=ceil(dem,ipr);
+    const totalM=r2(runs*m);
+    const money=Math.round(totalM*donGia);
     Object.assign(r,{runs,totalM,money});
     const rw=$$('#rows .row')[i];
-    if(rw){rw.querySelector('.runs').value=runs; rw.querySelector('.tm').value=totalM; rw.querySelector('.money').value=VND(money)}
+    if(rw){rw.querySelector('.runs').value=runs; rw.querySelector('.tm').value=totalM; rw.querySelector('.money').value=VND(money);}
     sumRuns+=runs; sumM+=totalM; sumMoney+=money; sumImgs+=dem;
   });
   sumM=r2(sumM);
@@ -232,11 +240,33 @@ function calc(){
     <span class="tag">Tổng hình sản xuất: <b>${sumImgs}</b></span>
     <span class="tag">Tổng tiền (đã cộng phí): <b>${VND(grand)} đ</b></span>
   `;
-  buildQuote(); // cập nhật preview A4
+  buildQuote();
+}
+
+// ===== dựng A4 preview =====
+function quoteTotalsHTML(){
+  let sumRuns=0,sumM=0,sumMoney=0,sumImgs=0;
+  const donGia=num($('#donGia').value);
+  state.rows.forEach(r=>{
+    const m=num(r.mPerRun), ipr=Math.max(1,Math.floor(num(r.imgPerRun))), dem=Math.max(0,Math.floor(num(r.demand)));
+    const runs=ceil(dem,ipr), totalM=r2(runs*m), money=Math.round(totalM*donGia);
+    sumRuns+=runs; sumM+=totalM; sumMoney+=money; sumImgs+=dem;
+  });
+  sumM=r2(sumM);
+  const grand=sumMoney + num($('#phiTk').value)+num($('#phiVc').value);
+  const avgPerImg = sumImgs>0 ? Math.round(grand/sumImgs) : 0;
+
+  return `
+  <table class="q-total">
+    <tr><td>Tổng lần in:</td><td style="text-align:right">${sumRuns}</td></tr>
+    <tr><td>Tổng mét sản xuất:</td><td style="text-align:right">${sumM}</td></tr>
+    <tr><td>Tổng hình sản xuất:</td><td style="text-align:right">${sumImgs}</td></tr>
+    <tr><td>Giá trung bình / 1 hình:</td><td style="text-align:right">${VND(avgPerImg)} đ</td></tr>
+    <tr class="q-grand"><td>TỔNG CỘNG:</td><td style="text-align:right">${VND(grand)} đ</td></tr>
+  </table>`;
 }
 
 function buildQuote(){
-  // dựng preview A4 theo ảnh mẫu
   const wrap=document.createElement('div');
   const d=new Date($('#ngay').value || new Date());
   const dateStr = d instanceof Date ? d.toLocaleDateString('vi-VN') : $('#ngay').value;
@@ -295,30 +325,8 @@ function buildQuote(){
   const q=$('#quoteA4'); q.innerHTML=''; q.appendChild(wrap.firstElementChild);
 }
 
-function quoteTotalsHTML(){
-  let sumRuns=0,sumM=0,sumMoney=0,sumImgs=0;
-  const donGia=num($('#donGia').value);
-  state.rows.forEach(r=>{
-    const m=num(r.mPerRun), ipr=Math.max(1,Math.floor(num(r.imgPerRun))), dem=Math.max(0,Math.floor(num(r.demand)));
-    const runs=ceil(dem,ipr), totalM=r2(runs*m), money=Math.round(totalM*donGia);
-    sumRuns+=runs; sumM+=totalM; sumMoney+=money; sumImgs+=dem;
-  });
-  sumM=r2(sumM);
-  const grand=sumMoney + num($('#phiTk').value)+num($('#phiVc').value);
-  const avgPerImg = sumImgs>0 ? Math.round(grand/sumImgs) : 0;
-
-  return `
-  <table class="q-total">
-    <tr><td>Tổng lần in:</td><td style="text-align:right">${sumRuns}</td></tr>
-    <tr><td>Tổng mét sản xuất:</td><td style="text-align:right">${sumM}</td></tr>
-    <tr><td>Tổng hình sản xuất:</td><td style="text-align:right">${sumImgs}</td></tr>
-    <tr><td>Giá trung bình / 1 hình:</td><td style="text-align:right">${VND(avgPerImg)} đ</td></tr>
-    <tr class="q-grand"><td>TỔNG CỘNG:</td><td style="text-align:right">${VND(grand)} đ</td></tr>
-  </table>`;
-}
-
+// ===== export PDF =====
 async function exportPDF(){
-  // watermark
   let wm=null;
   if($('#wm').checked){
     wm=document.createElement('div');
@@ -326,10 +334,7 @@ async function exportPDF(){
     wm.style.cssText='position:fixed;inset:0;pointer-events:none;opacity:.06;font-weight:800;font-size:90px;color:#0aa;display:grid;place-items:center;transform:rotate(-20deg)';
     document.body.appendChild(wm);
   }
-
-  // đảm bảo preview đã build
   buildQuote();
-
   const area=$('#quoteA4');
   const canvas=await html2canvas(area,{backgroundColor:'#fff',scale:2});
   if(wm) wm.remove();
@@ -337,33 +342,32 @@ async function exportPDF(){
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p','pt','a4');
   const pageW=pdf.internal.pageSize.getWidth();
-  const pageH=pdf.internal.pageSize.getHeight();
-
   const imgData=canvas.toDataURL('image/jpeg',0.98);
-  // scale fit width
   const w=pageW-32, h=canvas.height*(w/canvas.width);
   pdf.addImage(imgData,'JPEG',16,16,w,h,'','FAST');
-  const name = `BAO-GIA__${($('#maHang').value||'MH')}_${($('#khach').value||'KH')}__${new Date().toISOString().slice(0,10)}.pdf`;
+  const name=`BAO-GIA__${($('#maHang').value||'MH')}_${($('#khach').value||'KH')}__${new Date().toISOString().slice(0,10)}.pdf`;
   pdf.save(name);
 }
 
-/* events */
+/* Tabs */
 $('.tab[data-tab="compose"]').onclick=()=>switchTab('compose');
 $('.tab[data-tab="settings"]').onclick=()=>switchTab('settings');
 $('.tab[data-tab="preview"]').onclick=()=>{switchTab('preview'); buildQuote()};
-
 function switchTab(id){$$('.tab').forEach(t=>t.classList.toggle('act',t.dataset.tab===id)); $$('section').forEach(s=>s.classList.toggle('act',s.id===id));}
 
+/* Buttons */
 $('#btnAddNhi').onclick=()=>addRow({group:'nhí',mPerRun:0.31,imgPerRun:16,demand:0});
 $('#btnAddDai').onclick=()=>addRow({group:'đại',mPerRun:0.39,imgPerRun:13,demand:0});
 $('#btnAdd').onclick=()=>addRow();
 $('#btnExport').onclick=exportPDF;
 
+/* Tổng động khi đổi các trường header */
 ['#donGia','#phiTk','#phiVc','#khach','#soBg','#ghiChu','#maHang','#ngay','#sdt'].forEach(s=>{
-  const el=$(s); el.addEventListener('input',()=>calc());
+  $(s).addEventListener('input',calc);
 });
 
-addRow({group:'nhí',mPerRun:0.31,imgPerRun:16,demand:0}); // hàng mẫu
+/* Khởi tạo */
+addRow({group:'nhí',mPerRun:0.31,imgPerRun:16,demand:0});
 calc();
 </script>
 </body>
