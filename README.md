@@ -1,9 +1,9 @@
-# IN PET • Báo giá Pro — Dark Neon v3 (Watermark)
+# IN PET • Báo giá Pro — Dark Neon v3.3 (Drive DB Ready)
 
-Nâng cấp chính:
-- Sửa triệt để lỗi **nhập liệu ở hàng mới** bằng **event delegation** (tất cả hàng đều hoạt động).
-- Thêm **watermark "INPETPHUCHOANG"** (có công tắc bật/tắt khi xuất).
-- Logo "PH" trên header (có thể thay bằng logo Printee sau).
-- Đủ tính năng: CRUD (localStorage), upload ảnh, export PNG/PDF, quản lý tệp đã tạo, thống kê.
+- Giao diện Dark + Neon, xuất PNG/PDF có Watermark.
+- CRUD đơn hàng (localStorage) + upload ảnh đính kèm.
+- Kết nối Google Drive bằng Apps Script (đã điền sẵn URL của bạn).
+- Tab **Kho đơn hàng (Drive)**: liệt kê, mở & nhập đơn từ backup JSON mới nhất.
 
-Triển khai GitHub Pages: upload `index.html` vào root của branch `main`.
+## Deploy
+- Chỉ cần upload **index.html** này lên GitHub Pages / Netlify / Vercel là chạy.

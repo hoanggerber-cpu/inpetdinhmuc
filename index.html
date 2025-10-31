@@ -2,693 +2,351 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>IN PET • Báo giá Pro — Dark Neon v3 (Watermark + UX fix)</title>
-<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>IN PET • Báo giá Pro — Dark Neon v3.3 • Drive DB</title>
 <style>
-  :root{
-    --bg:#0b0f14; --panel:#10151d; --line:#1f2937;
-    --text:#ffffff; --muted:#9ca3af; --sub:#c7d2fe;
-    --neon:#41ffd0; --neon2:#00d1ff; --danger:#ff5a67;
-    --radius:16px; --font:-apple-system,system-ui,Segoe UI,Inter,Roboto,Helvetica,Arial;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; background:
-      radial-gradient(900px 600px at 10% -10%, rgba(0,209,255,.08), transparent 55%),
-      radial-gradient(900px 600px at 110% 10%, rgba(65,255,208,.08), transparent 60%),
-      var(--bg);
-    color:var(--text); font-family:var(--font);
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  }
-  .wrap{max-width:1240px;margin:0 auto;padding:14px 18px}
-  .hdr{position:sticky;top:0;z-index:10;background:rgba(9,12,16,.75);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line)}
-  .title{font-weight:800;letter-spacing:.2px}
-  .subtitle{color:var(--muted);font-size:13px}
-  .brand{display:flex;align-items:center;gap:10px}
-  .brand .logo{
-    width:40px;height:40px;border-radius:10px;
-    background:linear-gradient(135deg,var(--neon),var(--neon2));
-    display:grid;place-items:center;color:#081114;font-weight:900;
-    box-shadow:0 8px 24px rgba(0,0,0,.35);
-  }
-  .app{display:grid;grid-template-columns: 370px 1fr;min-height:100vh}
-  @media (max-width:1024px){.app{grid-template-columns:1fr}}
-
-  .sidebar{border-right:1px solid var(--line);background:linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.05))}
-
-  .input, .textarea, select, .search{
-    width:100%; background:rgba(255,255,255,.10);
-    border:1px solid rgba(255,255,255,.25);
-    color:#fff; caret-color:var(--neon);
-    border-radius:12px; padding:10px 12px; font-size:15px; line-height:22px;
-    outline:none; transition:border-color .15s, box-shadow .15s, background .15s;
-  }
-  .input::placeholder, .textarea::placeholder{color:#cbd5e1}
-  .input:focus, .textarea:focus, select:focus, .search:focus{
-    background:rgba(65,255,208,.14);
-    border-color:var(--neon);
-    box-shadow:0 0 0 3px rgba(65,255,208,.20);
-  }
-  .cell-input{height:40px; min-width:120px}
-  .cell-select{height:40px; min-width:110px}
-  .cell-number{height:40px; width:110px; text-align:center}
-
-  .color-cell{display:flex;align-items:center;gap:8px}
-  .colorPick{appearance:none;border:1px solid rgba(255,255,255,.25);width:44px;height:34px;border-radius:10px;background:#111}
-  .colorPick::-webkit-color-swatch{border-radius:8px;border:none}
-  .colorPick::-moz-color-swatch{border-radius:8px;border:none}
-  .swatch{width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.5)}
-
-  .card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));border:1px solid var(--line);
-        border-radius:var(--radius);padding:14px}
-  .panel{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid var(--line);
-        border-radius:var(--radius);padding:12px}
-
-  .btn{display:inline-flex;align-items:center;gap:.55rem;padding:.65rem 1rem;border-radius:12px;border:1px solid rgba(255,255,255,.25);
-       background:rgba(255,255,255,.06);color:#fff;cursor:pointer}
-  .btn:hover{box-shadow:0 0 0 2px rgba(255,255,255,.08) inset}
-  .primary{background:linear-gradient(90deg,var(--neon),var(--neon2));color:#081114;border-color:transparent;font-weight:700}
-  .danger{border-color:rgba(255,90,103,.6);color:#ffd4d8;background:rgba(255,90,103,.08)}
-
-  .seg{display:inline-flex;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-  .seg button{background:transparent;color:#c9d1d9;border:0;padding:.5rem .9rem;cursor:pointer}
-  .seg .active{color:#081114;background:linear-gradient(90deg,var(--neon),var(--neon2));font-weight:700}
-
-  table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;
-        background:rgba(255,255,255,.02)}
-  thead{background:linear-gradient(180deg, rgba(0,209,255,.10), rgba(65,255,208,.08));color:#e4faff}
-  th,td{padding:8px;border-bottom:1px solid var(--line)}
-  tbody tr:hover{background:rgba(65,255,208,.06)}
-  tbody tr:last-child td{border-bottom:0}
-
-  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-  .thumb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.04)}
-  .thumb img{width:100%;display:block;object-fit:contain;height:140px;background:#0a0f14}
-  .thumb .bar{display:flex;gap:6px;padding:8px;align-items:center;justify-content:space-between}
-
-  .muted{color:var(--muted);font-size:12px}
-  .sub{color:#cfe7ff}
-
-  #printArea{position:relative; overflow:hidden}
-  .wm{position:absolute; inset:0; pointer-events:none; opacity:.08;
-      background-image: repeating-linear-gradient(45deg, #fff 0 2px, transparent 2px 60px),
-                        repeating-linear-gradient(45deg, transparent 0 300px, #fff 300px 302px, transparent 302px 600px);
-      mix-blend-mode:overlay;}
-  .wmText{position:absolute; inset:0; display:grid; place-items:center;
-      transform:rotate(-30deg); font-size:64px; font-weight:900; letter-spacing:4px;
-      color:#ffffff; opacity:.06; text-transform:uppercase;}
+:root{
+  --bg:#0b0f14; --panel:#0e1218; --line:#1f2937; --text:#e5f2ff;
+  --neon:#41ffd9; --neon2:#00e6ff; --danger:#ff6a6a;
+  --muted:#7d88a1; --pill:#1a2230;
+}
+*{box-sizing:border-box} html,body{height:100%} body{
+  margin:0; color:var(--text); background:
+  radial-gradient(1200px 800px at 10% -10%, rgba(0,210,255,.06), transparent 55%),
+  radial-gradient(900px 600px at 110% 10%, rgba(0,255,210,.06), transparent 60%), var(--bg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+.wrap{max-width:1100px; margin:24px auto; padding:0 16px 48px}
+.hdr{position:sticky; top:0; z-index:5; background:linear-gradient(180deg, rgba(11,15,20,.95), rgba(11,15,20,.85));
+      backdrop-filter: blur(6px); border-bottom:1px solid var(--line)}
+.hdr .inner{max-width:1100px; margin:auto; padding:12px 16px; display:flex; gap:12px; align-items:center; justify-content:space-between}
+.brand{display:flex; gap:10px; align-items:center}
+.logo{width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, var(--neon), var(--neon2));
+       color:#00151a; display:grid; place-items:center; font-weight:800}
+.tabs{
+  display:flex; gap:8px; background:var(--pill); padding:4px; border-radius:12px; border:1px solid var(--line);
+}
+.tab{padding:8px 12px; border-radius:10px; cursor:pointer; color:#b9c7e6; user-select:none}
+.tab.active{background:var(--panel); color:var(--text); box-shadow:0 0 0 1px var(--line) inset}
+.grid{display:grid; gap:14px; grid-template-columns: 1fr 1fr}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px;  box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.card h3{margin:0 0 10px 0; font-size:18px}
+.row{display:grid; gap:10px; grid-template-columns: 140px 1fr; align-items:center}
+input,select,textarea{
+  width:100%; padding:10px 12px; border-radius:10px; background:#0c121a; color:var(--text);
+  border:1px solid #1a2a3a; outline:none; transition:.2s; font-size:14px;
+}
+input::placeholder, textarea::placeholder{color:#7f90a8}
+input:focus,textarea:focus,select:focus{border-color:var(--neon2); box-shadow:0 0 0 3px rgba(0,230,255,.12)}
+.btns{display:flex; gap:8px; flex-wrap:wrap}
+.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--line); background:#0c121a; color:#e9f5ff; cursor:pointer}
+.btn.primary{background:linear-gradient(180deg, var(--neon), var(--neon2)); color:#00141a; font-weight:700; border:none}
+.btn.danger{background:#1b0f12; border-color:#3b1a22; color:#ffb6c1}
+.kpi{display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; color:#9db0cc; font-size:13px}
+.kpi b{color:var(--text)}
+.list{display:flex; flex-direction:column; gap:10px}
+.item{display:flex; justify-content:space-between; padding:12px; background:#0c121a; border:1px solid #172333; border-radius:10px}
+.badge{padding:4px 8px; border-radius:999px; background:rgba(65,255,217,.1); color:#bffef1; border:1px solid rgba(65,255,217,.4)}
+hr.sep{border:0;border-top:1px dashed #213248;margin:12px 0}
+.small{font-size:12px; color:#8ea2c3}
+.toggle{display:flex; gap:8px; align-items:center; cursor:pointer; user-select:none}
+.toggle input{accent-color:#00e6ff; width:18px; height:18px}
+footer{margin-top:28px; color:#7f90a8; font-size:12px; text-align:center}
+@media (max-width: 900px){ .grid{grid-template-columns:1fr} .hdr .inner{gap:8px} }
 </style>
-<script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-<header class="hdr">
-  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<div class="hdr">
+  <div class="inner">
     <div class="brand">
       <div class="logo">PH</div>
       <div>
-        <div class="title">IN PET • Báo giá Pro</div>
-        <div class="subtitle">Dark Neon v3 • Watermark • CRUD + Ảnh + Export</div>
+        <div style="font-weight:800">IN PET • Báo giá Pro</div>
+        <div class="small">Dark Neon v3.3 · Watermark · Drive DB</div>
       </div>
     </div>
-    <div class="seg">
-      <button class="active" data-tab="editor">Soạn báo giá</button>
-      <button data-tab="files">Tệp đã tạo</button>
-      <button data-tab="stats">Thống kê</button>
+    <div class="tabs">
+      <div class="tab active" data-tab="compose">Soạn báo giá</div>
+      <div class="tab" data-tab="files">Tệp đã tạo</div>
+      <div class="tab" data-tab="drive">Kho đơn hàng (Drive)</div>
+      <div class="tab" data-tab="settings">Cài đặt</div>
     </div>
   </div>
-</header>
-
-<div class="app">
-  <aside class="sidebar">
-    <div class="wrap" style="padding-top:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div class="sub">Đơn báo giá</div>
-        <button id="btnNewOrder" class="btn primary">+ Tạo đơn</button>
-      </div>
-      <input id="searchOrders" class="search" placeholder="Tìm KH / mã hàng...">
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <select id="sortOrders" class="input" style="flex:1">
-          <option value="updatedAt">Mới cập nhật</option>
-          <option value="createdAt">Mới tạo</option>
-          <option value="customer">Tên KH (A→Z)</option>
-          <option value="totalDesc">Tổng tiền (↓)</option>
-        </select>
-        <button id="btnExportAll" class="btn">Xuất</button>
-        <label class="btn">Nhập <input id="importJson" type="file" accept="application/json" style="display:none"></label>
-      </div>
-      <div id="orderList" style="margin-top:10px; display:grid; gap:10px; max-height: calc(100vh - 230px); overflow:auto;"></div>
-    </div>
-  </aside>
-
-  <main>
-    <div class="wrap" style="padding-top:12px; display:grid; gap:14px;">
-      <div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="btnSave" class="btn primary">Lưu đơn</button>
-          <button id="btnDuplicateOrder" class="btn">Nhân bản</button>
-          <button id="btnDeleteOrder" class="btn danger">Xoá</button>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <label style="display:inline-flex;align-items:center;gap:6px" class="muted">
-            <input id="wmToggle" type="checkbox" checked>
-            Chèn watermark khi xuất
-          </label>
-          <button id="btnExportPNG" class="btn primary">Tải PNG</button>
-          <button id="btnExportPDF" class="btn">Tải PDF</button>
-        </div>
-      </div>
-
-      <section id="tab-editor" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="card">
-          <div class="sub" style="margin-bottom:8px">Khách hàng & Thiết lập</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div><label class="sub">Tên KH</label><input id="customer" class="input"/></div>
-            <div><label class="sub">Mã KH</label><input id="customerCode" class="input"/></div>
-            <div><label class="sub">Mã hàng in</label><input id="productCode" class="input"/></div>
-            <div><label class="sub">Đơn giá /1 mét (VND)</label><input id="unitPrice" class="input" inputmode="decimal" placeholder="vd 45000"/></div>
-            <div><label class="sub">Phí thiết kế</label><input id="designFee" class="input" inputmode="decimal" value="0"/></div>
-            <div><label class="sub">Phí vận chuyển</label><input id="shippingFee" class="input" inputmode="decimal" value="0"/></div>
-          </div>
-          <label class="sub" style="margin-top:8px;display:block">Ghi chú</label>
-          <textarea id="note" class="textarea" rows="2" placeholder="Thông tin thêm cho đơn..."></textarea>
-          <div style="margin-top:8px">
-            <label class="sub">Trạng thái</label>
-            <select id="label" class="input">
-              <option value="new">Mới</option>
-              <option value="inprogress">Đang làm</option>
-              <option value="done">Hoàn tất</option>
-            </select>
-          </div>
-
-          <div style="height:1px;background:linear-gradient(90deg, transparent, rgba(65,255,208,.35), transparent);margin:10px 0"></div>
-
-          <div>
-            <div class="sub" style="margin-bottom:6px">Ảnh đính kèm đơn hàng</div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
-              <label class="btn">+ Thêm ảnh<input id="orderImages" type="file" accept="image/*" multiple style="display:none"></label>
-              <button id="btnClearImages" class="btn">Xoá toàn bộ ảnh</button>
-            </div>
-            <div id="imageGrid" class="thumbs"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="sub" style="margin-bottom:8px">Chi tiết layout</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-            <button id="btnAddPresetNhi" class="btn">+ Nhí 8cm (16/0.31m)</button>
-            <button id="btnAddPresetDai" class="btn">+ Đại 9cm (13/0.39m)</button>
-            <button id="btnAddRow" class="btn">+ Thêm hàng</button>
-          </div>
-          <div class="panel">
-            <table>
-              <thead>
-                <tr>
-                  <th>Tên</th>
-                  <th>Nhóm</th>
-                  <th>Màu</th>
-                  <th>m/1 lần</th>
-                  <th>hình/1 lần</th>
-                  <th>Nhu cầu</th>
-                  <th>Lần in</th>
-                  <th>Tổng m</th>
-                  <th>Tiền</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="rows"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="card" style="grid-column:1 / -1">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <div class="sub">Bản in báo giá</div>
-            <div class="muted">Ngày: <span id="today"></span> • Mã: <span id="pcode"></span></div>
-          </div>
-          <div id="printArea" class="panel">
-            <div class="wm" id="wmFx" style="display:none"></div>
-            <div class="wmText" id="wmText" style="display:none">INPETPHUCHOANG</div>
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
-              <div>
-                <div style="font-weight:800; letter-spacing:.2px">Báo giá In PET</div>
-                <div id="headerLine" class="muted"></div>
-              </div>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Tên</th>
-                  <th>Nhóm</th>
-                  <th>m/1 lần</th>
-                  <th>hình/1 lần</th>
-                  <th>Nhu cầu</th>
-                  <th>Lần in</th>
-                  <th>Tổng m</th>
-                  <th style="text-align:right">Thành tiền</th>
-                </tr>
-              </thead>
-              <tbody id="printRows"></tbody>
-            </table>
-            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px">
-              <div class="panel">
-                <div>Tổng lần in: <b id="tRuns">0</b></div>
-                <div>Tổng mét: <b id="tMeters">0</b> m</div>
-                <div>Tổng nhu cầu: <b id="tDemand">0</b> hình</div>
-              </div>
-              <div class="panel">
-                <div>Nhóm Nhí: <b id="gNhiMeters">0</b> m</div>
-                <div>Nhóm Đại: <b id="gDaiMeters">0</b> m</div>
-              </div>
-              <div class="panel">
-                <div>Tạm tính: <b id="tSubtotal">0</b> đ</div>
-                <div>Phí thiết kế: <b id="tDesign">0</b> đ</div>
-                <div>Phí vận chuyển: <b id="tShip">0</b> đ</div>
-                <div style="font-size:18px;margin-top:4px">Tổng cộng: <b id="tTotal">0 đ</b></div>
-              </div>
-            </div>
-            <div class="muted" style="margin-top:6px">Ghi chú: <span id="tNote"></span></div>
-
-            <div id="printImagesWrap" style="margin-top:10px">
-              <div class="sub" style="margin-bottom:6px">Ảnh đính kèm:</div>
-              <div id="printImages" class="thumbs"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-files" class="card" style="display:none">
-        <div class="sub" style="margin-bottom:8px">Tệp đã tạo cho đơn này</div>
-        <div id="fileList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"></div>
-      </section>
-
-      <section id="tab-stats" class="card" style="display:none">
-        <div class="sub" style="margin-bottom:8px">Thống kê tổng hợp</div>
-        <div id="statsBox" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px"></div>
-      </section>
-    </div>
-  </main>
 </div>
 
-<template id="rowTpl">
-  <tr>
-    <td><input class="input cell-input name" placeholder="Tên layout"></td>
-    <td>
-      <select class="input cell-select group">
-        <option value="nhi">Nhí</option>
-        <option value="dai">Đại</option>
-        <option value="khac">Khác</option>
-      </select>
-    </td>
-    <td>
-      <div class="color-cell">
-        <input class="input cell-input colorText" placeholder="vd Hồng sen">
-        <input class="colorPick colorHex" type="color" value="#ffffff" title="Chọn màu">
-        <span class="swatch"></span>
-      </div>
-    </td>
-    <td><input class="input cell-number mper" inputmode="decimal" placeholder="0.31"></td>
-    <td><input class="input cell-number ipr" inputmode="decimal" placeholder="16"></td>
-    <td><input class="input cell-number demand" inputmode="decimal" placeholder="600"></td>
-    <td class="runs" style="text-align:center">0</td>
-    <td class="meters" style="text-align:center">0</td>
-    <td class="money" style="text-align:right">0</td>
-    <td><button class="btn danger delRow" style="padding:.35rem .6rem">X</button></td>
-  </tr>
-</template>
-
-<script>
-(function(){
-  const fmt = new Intl.NumberFormat('vi-VN');
-  const KEY = 'inpet_quoter_orders_v3_neon_wm';
-  const filesKey = (id)=> 'inpet_files_neon_'+id;
-  let state = {orders:[], activeId:null};
-
-  const el = (s,r=document)=>r.querySelector(s);
-  const els = (s,r=document)=>Array.from(r.querySelectorAll(s));
-  const uid = ()=> Math.random().toString(36).slice(2) + Date.now().toString(36);
-  const nowISO = ()=> new Date().toISOString();
-  const parseNum = (v)=>{ if(typeof v==='number') return v; if(!v) return 0; v=String(v).replace(',','.'); const n=parseFloat(v); return isNaN(n)?0:n; };
-
-  function save(){ localStorage.setItem(KEY, JSON.stringify({orders: state.orders, activeId: state.activeId})); }
-  function load(){
-    try{
-      const obj = JSON.parse(localStorage.getItem(KEY)||'null');
-      if (obj){ state.orders = obj.orders||[]; state.activeId = obj.activeId||state.orders[0]?.id||null; }
-    }catch{}
-  }
-  function activeOrder(){ return state.orders.find(o=>o.id===state.activeId)||null }
-  function touch(o){ o.updatedAt = nowISO(); save(); renderOrderList(); }
-
-  function fget(id){ try{ return JSON.parse(localStorage.getItem(filesKey(id))||'[]') }catch{ return [] } }
-  function fset(id, arr){ localStorage.setItem(filesKey(id), JSON.stringify(arr)) }
-
-  els('.seg button').forEach(b=> b.addEventListener('click', ()=>{
-    els('.seg button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
-    const t = b.dataset.tab;
-    el('#tab-editor').style.display = (t==='editor')?'grid':'none';
-    el('#tab-files').style.display = (t==='files')?'block':'none';
-    el('#tab-stats').style.display = (t==='stats')?'block':'none';
-    if (t==='files') renderFiles();
-    if (t==='stats') renderStats();
-  }));
-
-  function newOrder(){
-    const id = uid();
-    const order = { id, createdAt: nowISO(), updatedAt: nowISO(),
-      data: {customer:'', customerCode:'', productCode:'', unitPrice:0, designFee:0, shippingFee:0, note:'', label:'new', rows:[], images:[]},
-      totals: {}
-    };
-    state.orders.unshift(order); state.activeId = id;
-    save(); renderOrderList(); bindOrder(order);
-  }
-  function duplicateOrder(){
-    const o = activeOrder(); if(!o) return;
-    const copy = JSON.parse(JSON.stringify(o));
-    copy.id = uid(); copy.createdAt = nowISO(); copy.updatedAt = nowISO();
-    state.orders.unshift(copy); state.activeId = copy.id; save(); renderOrderList(); bindOrder(copy);
-  }
-  function deleteOrder(){
-    const o = activeOrder(); if(!o) return;
-    if (!confirm('Xoá đơn này?')) return;
-    localStorage.removeItem(filesKey(o.id));
-    state.orders = state.orders.filter(x=> x.id!==o.id);
-    state.activeId = state.orders[0]?.id||null;
-    save(); renderOrderList(); bindOrder(activeOrder());
-  }
-
-  function renderOrderList(){
-    const list = el('#orderList'); list.innerHTML='';
-    const q = el('#searchOrders').value.trim().toLowerCase();
-    const sort = el('#sortOrders').value;
-    let arr = [...state.orders];
-    if (q){ arr = arr.filter(o=> (o.data.customer+o.data.customerCode+o.data.productCode).toLowerCase().includes(q)); }
-    arr.forEach(o => { if (!o.totals || !('total' in o.totals)) o.totals = calcTotals(o.data); });
-    if (sort==='updatedAt') arr.sort((a,b)=> b.updatedAt.localeCompare(a.updatedAt));
-    else if (sort==='createdAt') arr.sort((a,b)=> b.createdAt.localeCompare(a.createdAt));
-    else if (sort==='customer') arr.sort((a,b)=> (a.data.customer||'').localeCompare(b.data.customer||''));
-    else if (sort==='totalDesc') arr.sort((a,b)=> (b.totals.total||0) - (a.totals.total||0));
-
-    for (const o of arr){
-      const card = document.createElement('div');
-      card.className = 'panel'; card.style.cursor='pointer';
-      card.innerHTML = `
-        <div style="display:flex;justify-content:space-between;gap:8px">
-          <div>
-            <div style="font-weight:700">${o.data.customer || '(Chưa đặt tên)'}</div>
-            <div class="muted">${o.data.productCode || ''}</div>
-            <div class="muted">Tổng: <b style="color:var(--neon)">${fmt.format(Math.round(o.totals.total||0))}</b> đ</div>
-          </div>
-          <div class="muted" style="text-align:right">${new Date(o.updatedAt).toLocaleString('vi-VN')}</div>
-        </div>`;
-      card.addEventListener('click', ()=>{ state.activeId = o.id; save(); bindOrder(o); });
-      list.appendChild(card);
-    }
-  }
-
-  function bindOrder(o){
-    if (!o){ el('#rows').innerHTML=''; el('#imageGrid').innerHTML=''; return; }
-    el('#today').textContent = new Date().toLocaleDateString('vi-VN');
-    el('#pcode').textContent = o.data.productCode||'';
-    el('#customer').value = o.data.customer||'';
-    el('#customerCode').value = o.data.customerCode||'';
-    el('#productCode').value = o.data.productCode||'';
-    el('#unitPrice').value = o.data.unitPrice||'';
-    el('#designFee').value = o.data.designFee||0;
-    el('#shippingFee').value = o.data.shippingFee||0;
-    el('#note').value = o.data.note||'';
-    el('#label').value = o.data.label||'new';
-    el('#headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
-    el('#tNote').textContent = o.data.note||'';
-
-    const tbody = el('#rows'); tbody.innerHTML='';
-    (o.data.rows||[]).forEach(r=>{
-      const tpl = el('#rowTpl').content.cloneNode(true);
-      const tr = tpl.querySelector('tr');
-      tr.querySelector('.name').value = r.name||'';
-      tr.querySelector('.group').value = r.group||'nhi';
-      tr.querySelector('.colorText').value = r.color||'';
-      tr.querySelector('.colorHex').value = r.colorHex||'#ffffff';
-      tr.querySelector('.swatch').style.background = r.colorHex||'#ffffff';
-      tr.querySelector('.mper').value = r.mper??'';
-      tr.querySelector('.ipr').value = r.ipr??'';
-      tr.querySelector('.demand').value = r.demand??'';
-      tbody.appendChild(tr);
-    });
-    renderImages(); recalcAndRender(); renderFiles();
-  }
-
-  // Delegation on table
-  el('#rows').addEventListener('input', (e)=>{
-    const tr = e.target.closest('tr'); if(!tr) return;
-    const idx = Array.from(tr.parentElement.children).indexOf(tr);
-    const o = activeOrder(); if(!o) return;
-    const row = o.data.rows[idx] || (o.data.rows[idx]={});
-    row.name = tr.querySelector('.name').value;
-    row.group = tr.querySelector('.group').value;
-    row.color = tr.querySelector('.colorText').value;
-    row.colorHex = tr.querySelector('.colorHex').value;
-    row.mper = parseNum(tr.querySelector('.mper').value);
-    row.ipr = parseNum(tr.querySelector('.ipr').value);
-    row.demand = parseNum(tr.querySelector('.demand').value);
-    const sw = tr.querySelector('.swatch'); if (sw) sw.style.background = row.colorHex;
-    touch(o); recalcAndRender();
-  });
-  el('#rows').addEventListener('click', (e)=>{
-    if (e.target.classList.contains('delRow')){
-      const tr = e.target.closest('tr'); const idx = Array.from(tr.parentElement.children).indexOf(tr);
-      const o = activeOrder(); if(!o) return;
-      o.data.rows.splice(idx,1); tr.remove(); touch(o); recalcAndRender();
-    }
-  });
-
-  function addRow(r=null){
-    const o = activeOrder(); if(!o) return;
-    o.data.rows.push(Object.assign({name:'',group:'khac',color:'',colorHex:'#ffffff',mper:0,ipr:0,demand:0}, r||{}));
-    touch(o);
-    const tpl = el('#rowTpl').content.cloneNode(true);
-    const tr = tpl.querySelector('tr');
-    const last = o.data.rows[o.data.rows.length-1];
-    tr.querySelector('.name').value = last.name||'';
-    tr.querySelector('.group').value = last.group||'khac';
-    tr.querySelector('.colorText').value = last.color||'';
-    tr.querySelector('.colorHex').value = last.colorHex||'#ffffff';
-    tr.querySelector('.swatch').style.background = last.colorHex||'#ffffff';
-    tr.querySelector('.mper').value = last.mper||'';
-    tr.querySelector('.ipr').value = last.ipr||'';
-    tr.querySelector('.demand').value = last.demand||'';
-    el('#rows').appendChild(tr);
-    setTimeout(()=> tr.querySelector('.name').focus(), 0);
-    tr.scrollIntoView({block:'nearest'});
-    recalcAndRender();
-  }
-
-  function calcTotals(data){
-    const unit = parseNum(data.unitPrice||0);
-    const rows = []; let totalRuns=0,totalMeters=0,totalDemand=0,subtotal=0;
-    const groupMeters = {nhi:0,dai:0,khac:0};
-    for (const r of data.rows||[]){
-      const mper = parseNum(r.mper), ipr=parseNum(r.ipr), demand=parseNum(r.demand);
-      const runs = ipr>0 ? Math.ceil(demand/ipr) : 0;
-      const meters = runs * mper;
-      const money = meters * unit;
-      rows.push({name:r.name||'', group:r.group||'khac', color:r.color||'', colorHex:r.colorHex||'#ffffff', mper, ipr, demand, runs, meters, money});
-      totalRuns+=runs; totalMeters+=meters; totalDemand+=demand; subtotal+=money;
-      groupMeters[r.group||'khac'] = (groupMeters[r.group||'khac']||0) + meters;
-    }
-    const total = subtotal + parseNum(data.designFee||0) + parseNum(data.shippingFee||0);
-    return {rows,totalRuns,totalMeters,totalDemand,subtotal,groupMeters,total};
-  }
-
-  function recalcAndRender(){
-    const o = activeOrder(); if (!o) return;
-    o.totals = calcTotals(o.data);
-    const pr = el('#printRows'); pr.innerHTML='';
-    o.totals.rows.forEach(r=>{
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${r.name}</td>
-        <td>${r.group}</td>
-        <td style="display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${r.colorHex};border:1px solid #fff6"></span>${r.color}</td>
-        <td style="text-align:center">${r.mper}</td>
-        <td style="text-align:center">${r.ipr}</td>
-        <td style="text-align:center">${r.demand}</td>
-        <td style="text-align:center">${r.runs}</td>
-        <td style="text-align:center">${r.meters.toFixed(2)}</td>
-        <td style="text-align:right;color:var(--neon)">${fmt.format(Math.round(r.money))}</td>`;
-      pr.appendChild(tr);
-    });
-    el('#tRuns').textContent = o.totals.totalRuns;
-    el('#tMeters').textContent = o.totals.totalMeters.toFixed(2);
-    el('#tDemand').textContent = o.totals.totalDemand;
-    el('#gNhiMeters').textContent = (o.totals.groupMeters.nhi||0).toFixed(2);
-    el('#gDaiMeters').textContent = (o.totals.groupMeters.dai||0).toFixed(2);
-    el('#tSubtotal').textContent = fmt.format(Math.round(o.totals.subtotal));
-    el('#tDesign').textContent = fmt.format(Math.round(activeOrder().data.designFee||0));
-    el('#tShip').textContent = fmt.format(Math.round(activeOrder().data.shippingFee||0));
-    el('#tTotal').textContent = fmt.format(Math.round(o.totals.total)) + ' đ';
-
-    const wrap = el('#printImages'); wrap.innerHTML='';
-    (o.data.images||[]).forEach(img=>{
-      const d = document.createElement('div');
-      d.className = 'thumb';
-      d.innerHTML = `<img src="${img.dataUrl}" alt=""><div class="bar"><div class="muted" style="font-size:12px">${img.name||''}</div></div>`;
-      wrap.appendChild(d);
-    });
-    el('#printImagesWrap').style.display = (o.data.images && o.data.images.length) ? 'block' : 'none';
-  }
-
-  el('#orderImages').addEventListener('change', async (e)=>{
-    const o = activeOrder(); if(!o) return;
-    const files = Array.from(e.target.files||[]);
-    for (const f of files){
-      const dataUrl = await fileToDataURL(f);
-      o.data.images.push({id: uid(), name: f.name, dataUrl});
-    }
-    touch(o); renderImages(); recalcAndRender();
-    e.target.value = '';
-  });
-  el('#btnClearImages').addEventListener('click', ()=>{
-    const o = activeOrder(); if(!o) return;
-    if (!o.data.images?.length) return;
-    if (!confirm('Xoá toàn bộ ảnh đính kèm?')) return;
-    o.data.images = []; touch(o); renderImages(); recalcAndRender();
-  });
-  function renderImages(){
-    const o = activeOrder(); if(!o) return;
-    const grid = el('#imageGrid'); grid.innerHTML='';
-    (o.data.images||[]).forEach(img=>{
-      const d = document.createElement('div');
-      d.className = 'thumb';
-      d.innerHTML = `
-        <img src="${img.dataUrl}" alt="">
-        <div class="bar">
-          <input class="input" style="padding:.35rem .5rem" value="${img.name}">
-          <button class="btn danger" style="padding:.35rem .5rem">X</button>
-        </div>`;
-      const input = d.querySelector('input');
-      input.addEventListener('change', ()=>{ img.name = input.value; touch(o); recalcAndRender(); });
-      d.querySelector('button').addEventListener('click', ()=>{
-        o.data.images = o.data.images.filter(x=> x.id!==img.id);
-        touch(o); renderImages(); recalcAndRender();
-      });
-      grid.appendChild(d);
-    });
-  }
-  function fileToDataURL(file){ return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file); }); }
-
-  function setWM(show){
-    el('#wmFx').style.display = show ? 'block' : 'none';
-    el('#wmText').style.display = show ? 'grid' : 'none';
-  }
-  function beforeExport(){
-    setWM(el('#wmToggle').checked);
-  }
-  function afterExport(){ setWM(false); }
-
-  function downloadData(dataUrl, name){ const a=document.createElement('a'); a.href=dataUrl; a.download=name; a.click(); }
-  function downloadUrl(url, name){ const a=document.createElement('a'); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000); }
-
-  async function exportPNG(){
-    beforeExport();
-    const area = el('#printArea');
-    if (!window.html2canvas){ alert('Thiếu thư viện xuất PNG (html2canvas).'); afterExport(); return; }
-    const o = activeOrder(); if(!o){ afterExport(); return; }
-    const canvas = await html2canvas(area, {backgroundColor:'#0b0f14', scale:2});
-    const data = canvas.toDataURL('image/png');
-    downloadData(data, `Bao-gia-${o.data.customer||'khach'}.png`);
-    const arr = fget(o.id);
-    arr.unshift({id:uid(), kind:'png', name:`Bao-gia-${o.data.customer||'khach'}.png`, createdAt:nowISO(), dataUrl:data});
-    fset(o.id, arr.slice(0,50)); renderFiles();
-    afterExport();
-  }
-  async function exportPDF(){
-    beforeExport();
-    if (!window.html2canvas || !(window.jspdf && window.jspdf.jsPDF)){ alert('Thiếu thư viện PDF (html2canvas + jsPDF).'); afterExport(); return; }
-    const o = activeOrder(); if(!o){ afterExport(); return; }
-    const area = el('#printArea');
-    const canvas = await html2canvas(area, {backgroundColor:'#0b0f14', scale:2});
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({unit:'pt', format:'a4'});
-    const pageW = pdf.internal.pageSize.getWidth();
-    const imgW = pageW - 48; const ratio = imgW / canvas.width; const imgH = canvas.height * ratio;
-    pdf.addImage(canvas.toDataURL('image/jpeg',1), 'JPEG', 24, 24, imgW, imgH, undefined, 'FAST');
-    const b = pdf.output('blob'); const url = URL.createObjectURL(b);
-    downloadUrl(url, `Bao-gia-${o.data.customer||'khach'}.pdf`);
-    const fr = new FileReader();
-    fr.onload = ()=>{ const arr=fget(o.id); arr.unshift({id:uid(),kind:'pdf',name:`Bao-gia-${o.data.customer||'khach'}.pdf`,createdAt:nowISO(),dataUrl:fr.result}); fset(o.id,arr.slice(0,50)); renderFiles(); };
-    fr.readAsDataURL(b);
-    afterExport();
-  }
-
-  function renderFiles(){
-    const o = activeOrder(); if(!o) return;
-    const box = el('#fileList'); box.innerHTML='';
-    const arr = fget(o.id);
-    for (const f of arr){
-      const card = document.createElement('div');
-      card.className = 'panel';
-      const thumb = f.kind==='png'
-        ? `<img src="${f.dataUrl}" style="display:block;width:100%;height:160px;object-fit:contain;background:#0a0f14;border-radius:12px">`
-        : `<div style="display:grid;place-items:center;width:100%;height:160px;background:#0a0f14;border-radius:12px;color:var(--neon)">PDF</div>`;
-      card.innerHTML = `
-        ${thumb}
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <input class="input fname" value="${f.name}">
-          <button class="btn danger del">Xoá</button>
-          <a class="btn primary" download="${f.name}" href="${f.dataUrl}">Tải</a>
+<div class="wrap">
+  <section class="tab-panel" id="tab-compose">
+    <div class="grid">
+      <div class="card">
+        <h3>Khách hàng & Thiết lập</h3>
+        <div class="row"><label>Tên KH</label><input id="customer" placeholder="vd. CHI PHUONG"/></div>
+        <div class="row"><label>Mã KH</label><input id="customerCode" placeholder="vd. DECAL"/></div>
+        <div class="row"><label>Đơn giá /m (VND)</label><input id="unitPrice" type="number" value="150000"/></div>
+        <div class="row"><label>Phí thiết kế</label><input id="designFee" type="number" value="0"/></div>
+        <div class="row"><label>Phí vận chuyển</label><input id="shippingFee" type="number" value="0"/></div>
+        <div class="row"><label>Ghi chú</label><textarea id="note" rows="3" placeholder="Ghi chú in PET..."></textarea></div>
+        <hr class="sep"/>
+        <div class="btns">
+          <button class="btn primary" id="btnSave">Lưu đơn</button>
+          <button class="btn" id="btnDuplicate">Nhân bản</button>
+          <button class="btn danger" id="btnDelete">Xoá</button>
         </div>
-        <div class="muted" style="margin-top:6px">${new Date(f.createdAt).toLocaleString('vi-VN')}</div>`;
-      card.querySelector('.del').addEventListener('click', ()=>{
-        const list = fget(o.id).filter(x=> x.id!==f.id); fset(o.id, list); renderFiles();
-      });
-      card.querySelector('.fname').addEventListener('change', (e)=>{
-        const list = fget(o.id); const t = list.find(x=> x.id===f.id); if (t) t.name = e.target.value; fset(o.id, list);
-      });
-      box.appendChild(card);
-    }
-  }
+        <div class="kpi small" id="kpi"></div>
+      </div>
+      <div class="card">
+        <h3>Tệp đính kèm</h3>
+        <div class="btns">
+          <label class="btn"><input type="file" id="addImage" multiple accept="image/*" style="display:none">+ Thêm ảnh</label>
+          <button class="btn" id="btnClearImages">Xoá toàn bộ ảnh</button>
+        </div>
+        <div id="thumbs" class="list" style="margin-top:10px"></div>
+        <hr class="sep"/>
+        <div class="toggle"><input type="checkbox" id="wm" checked/> <span>Chèn watermark khi xuất</span></div>
+        <div class="btns" style="margin-top:10px">
+          <button class="btn" id="btnPNG">Tải PNG</button>
+          <button class="btn" id="btnPDF">Tải PDF</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  el('#btnSave').addEventListener('click', ()=> save());
-  el('#btnDuplicateOrder').addEventListener('click', duplicateOrder);
-  el('#btnDeleteOrder').addEventListener('click', deleteOrder);
-  el('#btnNewOrder').addEventListener('click', newOrder);
-  el('#btnExportPNG').addEventListener('click', exportPNG);
-  el('#btnExportPDF').addEventListener('click', exportPDF);
-  el('#searchOrders').addEventListener('input', renderOrderList);
-  el('#sortOrders').addEventListener('change', renderOrderList);
+  <section class="tab-panel" id="tab-files" style="display:none">
+    <div class="card">
+      <h3>Tệp đã tạo cho đơn này</h3>
+      <div class="btns"><button class="btn" id="btnSyncDrive">↻ Đồng bộ Drive</button></div>
+      <div id="fileList" class="list" style="margin-top:10px"></div>
+    </div>
+  </section>
 
-  ['customer','customerCode','productCode','unitPrice','designFee','shippingFee','note','label'].forEach(id=>{
-    el('#'+id).addEventListener('input', ()=>{
-      const o = activeOrder(); if (!o) return;
-      const v = el('#'+id).value;
-      if (['unitPrice','designFee','shippingFee'].includes(id)) o.data[id] = parseNum(v);
-      else o.data[id] = v;
-      if (id==='productCode') el('#pcode').textContent = v;
-      if (id==='customer'||id==='customerCode') el('#headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
-      if (id==='note') el('#tNote').textContent = v;
-      touch(o); recalcAndRender();
-    });
+  <section class="tab-panel" id="tab-drive" style="display:none">
+    <div class="card">
+      <h3>Kho đơn hàng (Drive)</h3>
+      <div class="btns">
+        <button class="btn" id="btnLoadOrders">↻ Tải danh sách</button>
+      </div>
+      <div id="driveOrders" class="list" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="tab-settings" style="display:none">
+    <div class="card">
+      <h3>Cài đặt kết nối Drive</h3>
+      <div class="row"><label>Google Web App URL</label><input id="apiUrl" placeholder="https://script.google.com/.../exec"/></div>
+      <div class="row"><label>SECRET (tuỳ chọn)</label><input id="apiSecret" placeholder="để trống nếu không dùng"/></div>
+      <div class="btns"><button class="btn primary" id="btnSaveCfg">Lưu cài đặt</button><button class="btn" id="btnTest">Kiểm tra kết nối</button></div>
+      <p class="small">URL mặc định đã cài sẵn cho kho Drive của bạn. Có thể đổi nếu cần.</p>
+    </div>
+  </section>
+
+  <footer>© INPETPHUCHOANG • Dark Neon + Watermark • Drive Database</footer>
+</div>
+
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>
+const DEFAULT_API = "https://script.google.com/macros/s/AKfycbx10xK42FxwyO8UikdWcqAAinSz5FMj_SnCOWzMCVmr5G-5981pz2d004sl8Q2vYQmBLQ/exec";
+
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+const S = (k,v) => (v===undefined? JSON.parse(localStorage.getItem(k)||'null'): localStorage.setItem(k, JSON.stringify(v)));
+const N = v => Math.max(0, Number(v||0));
+const fmt = n => n.toLocaleString('vi-VN');
+
+// Tabs
+$$('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  $$('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  const id = t.dataset.tab;
+  $$('.tab-panel').forEach(p=> p.style.display = 'none');
+  $('#tab-'+id).style.display='block';
+}));
+
+// State
+let state = S('inpet_state') || { orders:[], activeId: null };
+function persist(){ S('inpet_state', state); renderKPI(); }
+
+function activeOrder(){ return state.orders.find(o=>o.id===state.activeId) || null; }
+function newId(){ return 'od-'+Math.random().toString(36).slice(2,10); }
+
+function bindInputs(){
+  const ids = ['customer','customerCode','unitPrice','designFee','shippingFee','note'];
+  ids.forEach(id=>{
+    $('#'+id).addEventListener('input', e=>{ const o = activeOrder(); if(!o) return; o.data[id] = e.target.value; persist(); });
   });
+}
+bindInputs();
 
-  el('#btnAddPresetNhi').addEventListener('click', ()=> addRow({name:'Nhí 8cm', group:'nhi', color:'', colorHex:'#ffffff', mper:0.31, ipr:16, demand:0}));
-  el('#btnAddPresetDai').addEventListener('click', ()=> addRow({name:'Đại 9cm', group:'dai', color:'', colorHex:'#ffffff', mper:0.39, ipr:13, demand:0}));
-  el('#btnAddRow').addEventListener('click', ()=> addRow({group:'khac', colorHex:'#ffffff'}));
-
-  load();
-  if (!state.orders.length){
-    const id = uid();
-    state.orders = [{
-      id, createdAt: nowISO(), updatedAt: nowISO(),
-      data: {customer:'', customerCode:'', productCode:'', unitPrice:0, designFee:0, shippingFee:0, note:'', label:'new', rows:[], images:[]},
-      totals: {}
-    }];
-    state.activeId = id; save();
+function renderKPI(){
+  const o = activeOrder(); if(!o) { $('#kpi').innerHTML = 'Chưa có đơn'; return; }
+  $('#kpi').innerHTML = `Mã: <b>${o.data.customerCode||'-'}</b> • Khách: <b>${o.data.customer||'-'}</b> • Giá/m: <b>${fmt(N(o.data.unitPrice))}đ</b>`;
+  // thumbnails
+  const el = $('#thumbs'); el.innerHTML='';
+  for(const img of o.images){
+    const row = document.createElement('div'); row.className='item';
+    row.innerHTML = `<span>${img.name}</span>
+      <span class="btns"><a class="btn small" href="${img.dataUrl}" download="${img.name}">Tải</a>
+      <button class="btn danger small">X</button></span>`;
+    row.querySelector('button').onclick=()=>{ o.images = o.images.filter(x=>x!==img); persist(); renderKPI(); };
+    el.appendChild(row);
   }
-  renderOrderList(); bindOrder(activeOrder());
-})();
+  // files from Drive
+  refreshFilesList();
+}
+
+function newOrder(){
+  const id = newId();
+  state.orders.unshift({ id, created: Date.now(), data:{customer:'',customerCode:'',unitPrice:150000,designFee:0,shippingFee:0,note:''}, images:[], driveFiles:[] });
+  state.activeId = id; persist(); loadToForm(); alert('Đã tạo đơn mới'); 
+}
+
+function duplicateOrder(){ const o = activeOrder(); if(!o) return; const c = JSON.parse(JSON.stringify(o)); c.id=newId(); c.created=Date.now(); state.orders.unshift(c); state.activeId=c.id; persist(); loadToForm(); }
+function deleteOrder(){ if(!activeOrder()) return; if(!confirm('Xoá đơn hiện tại?')) return; state.orders = state.orders.filter(o=>o.id!==state.activeId); state.activeId = state.orders[0]?.id||null; persist(); loadToForm(); }
+
+function loadToForm(){
+  const o = activeOrder(); if(!o) { ['customer','customerCode','unitPrice','designFee','shippingFee','note'].forEach(id=> $('#'+id).value=''); $('#thumbs').innerHTML=''; $('#fileList').innerHTML=''; return; }
+  $('#customer').value=o.data.customer||''; $('#customerCode').value=o.data.customerCode||'';
+  $('#unitPrice').value=o.data.unitPrice||0; $('#designFee').value=o.data.designFee||0; $('#shippingFee').value=o.data.shippingFee||0; $('#note').value=o.data.note||'';
+  renderKPI();
+}
+
+$('#btnSave').onclick = ()=>{ if(!activeOrder()) newOrder(); else { persist(); alert('Đã lưu đơn'); } };
+$('#btnDuplicate').onclick = duplicateOrder;
+$('#btnDelete').onclick = deleteOrder;
+
+$('#addImage').addEventListener('change', async (e)=>{
+  const files = Array.from(e.target.files||[]);
+  const o = activeOrder(); if(!o) return;
+  for(const f of files){
+    const b = await f.arrayBuffer(); const base = btoa(String.fromCharCode(...new Uint8Array(b)));
+    const dataUrl = `data:${f.type};base64,${base}`;
+    o.images.push({ name:f.name, dataUrl });
+  }
+  persist(); renderKPI();
+});
+$('#btnClearImages').onclick = ()=>{ const o = activeOrder(); if(!o) return; o.images=[]; persist(); renderKPI(); };
+
+// Export helpers
+function stampWatermark(canvas){
+  if(!$('#wm').checked) return canvas;
+  const ctx = canvas.getContext('2d');
+  ctx.save(); ctx.globalAlpha = 0.13; ctx.translate(canvas.width/2, canvas.height/2); ctx.rotate(-Math.PI/6);
+  ctx.fillStyle = '#00e6ff'; ctx.textAlign='center'; ctx.font = 'bold 64px Segoe UI';
+  ctx.fillText('INPET • PHUC HOANG', 0, 0);
+  ctx.restore(); return canvas;
+}
+
+async function exportPNG(){
+  const node = document.body; // export toàn trang cho nhanh
+  const canvas = await html2canvas(node, {scale:2, backgroundColor:null});
+  stampWatermark(canvas);
+  const link = document.createElement('a'); link.download = (activeOrder()?.data.customerCode||'inpet') + '.png';
+  link.href = canvas.toDataURL('image/png'); link.click();
+  // upload to Drive
+  await uploadToDrive('png', link.download, link.href);
+}
+
+async function exportPDF(){
+  const node = document.body;
+  const canvas = await html2canvas(node, {scale:2, backgroundColor:'#ffffff'});
+  stampWatermark(canvas);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','pt','a4');
+  const w = pdf.internal.pageSize.getWidth();
+  const h = canvas.height * (w / canvas.width);
+  pdf.addImage(canvas.toDataURL('image/png'),'PNG',0,0,w,h);
+  const name = (activeOrder()?.data.customerCode||'inpet') + '.pdf';
+  pdf.save(name);
+  await uploadToDrive('pdf', name, canvas.toDataURL('image/png'));
+}
+
+$('#btnPNG').onclick = exportPNG;
+$('#btnPDF').onclick = exportPDF;
+
+// Drive API
+function cfg(){
+  const c = S('inpet_cfg') || { api: DEFAULT_API, token: '' };
+  return c;
+}
+function setCfg(v){ S('inpet_cfg', v); }
+$('#apiUrl').value = (S('inpet_cfg')?.api) || DEFAULT_API;
+$('#apiSecret').value = (S('inpet_cfg')?.token) || '';
+
+$('#btnSaveCfg').onclick = ()=>{ setCfg({ api: $('#apiUrl').value.trim()||DEFAULT_API, token: $('#apiSecret').value.trim() }); alert('Đã lưu cấu hình'); };
+$('#btnTest').onclick = async ()=>{
+  const r = await fetch(cfg().api, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'ping', token: cfg().token }) }).then(r=>r.json()).catch(e=>({ok:false, error:String(e)}));
+  alert('Kết nối: ' + JSON.stringify(r));
+};
+
+async function uploadToDrive(kind, filename, dataUrl){
+  const o = activeOrder(); if(!o) return;
+  // backup JSON trước
+  await fetch(cfg().api, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+    type:'saveOrderJson', token: cfg().token, orderId:o.data.customerCode||o.id, data:o
+  }) }).catch(()=>{});
+  // upload file
+  const res = await fetch(cfg().api, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+    type:'saveFile', token: cfg().token, orderId:o.data.customerCode||o.id, name:filename, dataUrl
+  }) }).then(r=>r.json()).catch(e=>({ok:false, error:String(e)}));
+  if(res?.ok) alert('Đã lưu lên Drive: '+res.name); else console.warn(res);
+  await refreshFilesList();
+}
+
+async function refreshFilesList(){
+  const o = activeOrder(); if(!o) { $('#fileList').innerHTML=''; return; }
+  const orderId = o.data.customerCode||o.id;
+  const res = await fetch(cfg().api, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+    type:'listFiles', token: cfg().token, orderId
+  }) }).then(r=>r.json()).catch(e=>({ok:false, error:String(e)}));
+  const box = $('#fileList'); box.innerHTML='';
+  if(!res?.ok) { box.innerHTML = '<div class="small">Không tải được từ Drive.</div>'; return; }
+  res.files.forEach(f=>{
+    const row = document.createElement('div'); row.className='item';
+    row.innerHTML = `<span>${f.name}</span>
+      <span class="btns"><a href="${f.url}" class="btn small" target="_blank">Tải</a></span>`;
+    box.appendChild(row);
+  });
+}
+
+$('#btnSyncDrive').onclick = refreshFilesList;
+
+$('#btnLoadOrders').onclick = async ()=>{
+  const res = await fetch(cfg().api, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+    type:'listOrders', token: cfg().token
+  }) }).then(r=>r.json()).catch(e=>({ok:false, error:String(e)}));
+  const box = $('#driveOrders'); box.innerHTML='';
+  if(!res?.ok) { box.innerHTML = '<div class="small">Không tải được danh sách.</div>'; return; }
+  res.items.forEach(it=>{
+    const row = document.createElement('div'); row.className='item';
+    const latest = it.latestBackup ? `<span class="badge">backup: ${it.latestBackup.name}</span>` : '<span class="small">chưa có backup</span>';
+    row.innerHTML = `<div><b>${it.orderId}</b><div class="small">${latest}</div></div>
+      <div class="btns">
+        <a class="btn small" href="${it.folderUrl}" target="_blank">Mở thư mục</a>
+        <button class="btn small">Mở & nhập</button>
+      </div>`;
+    row.querySelector('button').onclick = async ()=>{
+      if(!it.latestBackup) return alert('Chưa có backup JSON');
+      const j = await fetch(cfg().api, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+        type:'getFileJson', token: cfg().token, fileId: it.latestBackup.id
+      }) }).then(r=>r.json());
+      if(!j?.ok || !j?.json) return alert('Không đọc được JSON');
+      // nạp đơn vào state (ghi đè/ thêm mới)
+      const d = j.json;
+      d.id = newId(); d.created = Date.now();
+      state.orders.unshift(d); state.activeId = d.id; persist(); loadToForm();
+      alert('Đã nhập đơn từ Drive');
+      // chuyển qua Soạn
+      $$('.tab').forEach(x=>x.classList.remove('active')); 
+      $$('.tab')[0].classList.add('active');
+      $$('.tab-panel').forEach(p=> p.style.display = 'none'); $('#tab-compose').style.display='block';
+    };
+    box.appendChild(row);
+  });
+};
+
+// boot
+if(!state.activeId && state.orders.length) state.activeId = state.orders[0].id;
+if(!state.orders.length) newOrder(); else loadToForm();
 </script>
 </body>
 </html>
