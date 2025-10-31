@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>IN PET • Báo giá Pro — Dark Neon v2 (UX nâng cao)</title>
+<title>IN PET • Báo giá Pro — Dark Neon v3 (Watermark + UX fix)</title>
 <meta name="color-scheme" content="dark">
 <style>
   :root{
@@ -26,7 +26,13 @@
   .hdr{position:sticky;top:0;z-index:10;background:rgba(9,12,16,.75);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line)}
   .title{font-weight:800;letter-spacing:.2px}
   .subtitle{color:var(--muted);font-size:13px}
-
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--neon),var(--neon2));
+    display:grid;place-items:center;color:#081114;font-weight:900;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
   .app{display:grid;grid-template-columns: 370px 1fr;min-height:100vh}
   @media (max-width:1024px){.app{grid-template-columns:1fr}}
 
@@ -48,7 +54,6 @@
   .cell-input{height:40px; min-width:120px}
   .cell-select{height:40px; min-width:110px}
   .cell-number{height:40px; width:110px; text-align:center}
-  .cell-small{height:40px; width:70px; text-align:center}
 
   .color-cell{display:flex;align-items:center;gap:8px}
   .colorPick{appearance:none;border:1px solid rgba(255,255,255,.25);width:44px;height:34px;border-radius:10px;background:#111}
@@ -85,7 +90,15 @@
 
   .muted{color:var(--muted);font-size:12px}
   .sub{color:#cfe7ff}
-  .kpi{font-weight:800;font-size:22px}
+
+  #printArea{position:relative; overflow:hidden}
+  .wm{position:absolute; inset:0; pointer-events:none; opacity:.08;
+      background-image: repeating-linear-gradient(45deg, #fff 0 2px, transparent 2px 60px),
+                        repeating-linear-gradient(45deg, transparent 0 300px, #fff 300px 302px, transparent 302px 600px);
+      mix-blend-mode:overlay;}
+  .wmText{position:absolute; inset:0; display:grid; place-items:center;
+      transform:rotate(-30deg); font-size:64px; font-weight:900; letter-spacing:4px;
+      color:#ffffff; opacity:.06; text-transform:uppercase;}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -93,9 +106,12 @@
 <body>
 <header class="hdr">
   <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-    <div>
-      <div class="title">IN PET • Báo giá Pro</div>
-      <div class="subtitle">Dark Neon v2 • Tối ưu nhập liệu • CRUD + Ảnh + Export</div>
+    <div class="brand">
+      <div class="logo">PH</div>
+      <div>
+        <div class="title">IN PET • Báo giá Pro</div>
+        <div class="subtitle">Dark Neon v3 • Watermark • CRUD + Ảnh + Export</div>
+      </div>
     </div>
     <div class="seg">
       <button class="active" data-tab="editor">Soạn báo giá</button>
@@ -135,7 +151,11 @@
           <button id="btnDuplicateOrder" class="btn">Nhân bản</button>
           <button id="btnDeleteOrder" class="btn danger">Xoá</button>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <label style="display:inline-flex;align-items:center;gap:6px" class="muted">
+            <input id="wmToggle" type="checkbox" checked>
+            Chèn watermark khi xuất
+          </label>
           <button id="btnExportPNG" class="btn primary">Tải PNG</button>
           <button id="btnExportPDF" class="btn">Tải PDF</button>
         </div>
@@ -209,6 +229,8 @@
             <div class="muted">Ngày: <span id="today"></span> • Mã: <span id="pcode"></span></div>
           </div>
           <div id="printArea" class="panel">
+            <div class="wm" id="wmFx" style="display:none"></div>
+            <div class="wmText" id="wmText" style="display:none">INPETPHUCHOANG</div>
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
               <div>
                 <div style="font-weight:800; letter-spacing:.2px">Báo giá In PET</div>
@@ -293,14 +315,14 @@
     <td class="runs" style="text-align:center">0</td>
     <td class="meters" style="text-align:center">0</td>
     <td class="money" style="text-align:right">0</td>
-    <td><button class="btn danger" style="padding:.35rem .6rem">X</button></td>
+    <td><button class="btn danger delRow" style="padding:.35rem .6rem">X</button></td>
   </tr>
 </template>
 
 <script>
 (function(){
   const fmt = new Intl.NumberFormat('vi-VN');
-  const KEY = 'inpet_quoter_orders_v3_neon';
+  const KEY = 'inpet_quoter_orders_v3_neon_wm';
   const filesKey = (id)=> 'inpet_files_neon_'+id;
   let state = {orders:[], activeId:null};
 
@@ -308,28 +330,7 @@
   const els = (s,r=document)=>Array.from(r.querySelectorAll(s));
   const uid = ()=> Math.random().toString(36).slice(2) + Date.now().toString(36);
   const nowISO = ()=> new Date().toISOString();
-  // Cải tiến: Thêm format số khi nhập và thoát khỏi trường
-  const parseNum = (v)=>{ 
-    if(typeof v==='number') return v; 
-    if(!v) return 0; 
-    v=String(v).replace(/\./g, '').replace(',','.'); // Xóa dấu chấm (phân cách hàng nghìn) trước khi parse
-    const n=parseFloat(v); 
-    return isNaN(n)?0:n; 
-  };
-  const formatNum = (v)=> v > 0 ? fmt.format(Math.round(v)) : '';
-
-  // Bổ sung: Hàm Debounce để tối ưu nhập liệu
-  function debounce(func, timeout = 400) {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
-    };
-  }
-  const debouncedRecalcAndTouch = debounce((o) => {
-    touch(o); 
-    recalcAndRender();
-  });
+  const parseNum = (v)=>{ if(typeof v==='number') return v; if(!v) return 0; v=String(v).replace(',','.'); const n=parseFloat(v); return isNaN(n)?0:n; };
 
   function save(){ localStorage.setItem(KEY, JSON.stringify({orders: state.orders, activeId: state.activeId})); }
   function load(){
@@ -414,80 +415,74 @@
     el('#customer').value = o.data.customer||'';
     el('#customerCode').value = o.data.customerCode||'';
     el('#productCode').value = o.data.productCode||'';
-    
-    // Cải tiến: Format số khi load
-    el('#unitPrice').value = formatNum(o.data.unitPrice||0);
-    el('#designFee').value = formatNum(o.data.designFee||0);
-    el('#shippingFee').value = formatNum(o.data.shippingFee||0);
-    
+    el('#unitPrice').value = o.data.unitPrice||'';
+    el('#designFee').value = o.data.designFee||0;
+    el('#shippingFee').value = o.data.shippingFee||0;
     el('#note').value = o.data.note||'';
     el('#label').value = o.data.label||'new';
     el('#headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
     el('#tNote').textContent = o.data.note||'';
 
     const tbody = el('#rows'); tbody.innerHTML='';
-    (o.data.rows||[]).forEach(r=> addRowUI(r));
+    (o.data.rows||[]).forEach(r=>{
+      const tpl = el('#rowTpl').content.cloneNode(true);
+      const tr = tpl.querySelector('tr');
+      tr.querySelector('.name').value = r.name||'';
+      tr.querySelector('.group').value = r.group||'nhi';
+      tr.querySelector('.colorText').value = r.color||'';
+      tr.querySelector('.colorHex').value = r.colorHex||'#ffffff';
+      tr.querySelector('.swatch').style.background = r.colorHex||'#ffffff';
+      tr.querySelector('.mper').value = r.mper??'';
+      tr.querySelector('.ipr').value = r.ipr??'';
+      tr.querySelector('.demand').value = r.demand??'';
+      tbody.appendChild(tr);
+    });
     renderImages(); recalcAndRender(); renderFiles();
   }
 
-  function addRowUI(r=null){
+  // Delegation on table
+  el('#rows').addEventListener('input', (e)=>{
+    const tr = e.target.closest('tr'); if(!tr) return;
+    const idx = Array.from(tr.parentElement.children).indexOf(tr);
+    const o = activeOrder(); if(!o) return;
+    const row = o.data.rows[idx] || (o.data.rows[idx]={});
+    row.name = tr.querySelector('.name').value;
+    row.group = tr.querySelector('.group').value;
+    row.color = tr.querySelector('.colorText').value;
+    row.colorHex = tr.querySelector('.colorHex').value;
+    row.mper = parseNum(tr.querySelector('.mper').value);
+    row.ipr = parseNum(tr.querySelector('.ipr').value);
+    row.demand = parseNum(tr.querySelector('.demand').value);
+    const sw = tr.querySelector('.swatch'); if (sw) sw.style.background = row.colorHex;
+    touch(o); recalcAndRender();
+  });
+  el('#rows').addEventListener('click', (e)=>{
+    if (e.target.classList.contains('delRow')){
+      const tr = e.target.closest('tr'); const idx = Array.from(tr.parentElement.children).indexOf(tr);
+      const o = activeOrder(); if(!o) return;
+      o.data.rows.splice(idx,1); tr.remove(); touch(o); recalcAndRender();
+    }
+  });
+
+  function addRow(r=null){
+    const o = activeOrder(); if(!o) return;
+    o.data.rows.push(Object.assign({name:'',group:'khac',color:'',colorHex:'#ffffff',mper:0,ipr:0,demand:0}, r||{}));
+    touch(o);
     const tpl = el('#rowTpl').content.cloneNode(true);
     const tr = tpl.querySelector('tr');
-    const name = tr.querySelector('.name');
-    const group = tr.querySelector('.group');
-    const colorText = tr.querySelector('.colorText');
-    const colorHex = tr.querySelector('.colorHex');
-    const swatch = tr.querySelector('.swatch');
-    const mper = tr.querySelector('.mper');
-    const ipr = tr.querySelector('.ipr');
-    const demand = tr.querySelector('.demand');
-    const btnDel = tr.querySelector('.btn');
-
-    name.value = r?.name||'';
-    group.value = r?.group||'nhi';
-    colorText.value = r?.color||'';
-    colorHex.value = r?.colorHex||'#ffffff';
-    swatch.style.background = colorHex.value;
-    
-    mper.value = r?.mper > 0 ? String(r.mper) : ''; // Giữ số thập phân
-    ipr.value = r?.ipr > 0 ? String(r.ipr) : '';
-    demand.value = formatNum(r?.demand||0); // Format nhu cầu
-
-    const onChange = ()=>{
-      const o = activeOrder(); if (!o) return;
-      const idx = Array.from(tr.parentElement.children).indexOf(tr);
-      const row = o.data.rows[idx] || {};
-      row.name = name.value;
-      row.group = group.value;
-      row.color = colorText.value;
-      row.colorHex = colorHex.value;
-      
-      // Lấy giá trị số thô (chưa format)
-      row.mper = parseNum(mper.value);
-      row.ipr = parseNum(ipr.value);
-      row.demand = parseNum(demand.value);
-      
-      o.data.rows[idx] = row;
-      // Cải tiến: Gọi Debounce thay vì touch() trực tiếp
-      debouncedRecalcAndTouch(o);
-    };
-    [name,group,colorText,mper,ipr,demand].forEach(inp=> inp.addEventListener('input', onChange));
-    colorHex.addEventListener('input', ()=>{ swatch.style.background = colorHex.value; onChange(); });
-
-    // Bổ sung: Format lại khi thoát khỏi trường nhập liệu lớn (demand)
-    demand.addEventListener('blur', (e) => {
-        const val = parseNum(e.target.value);
-        e.target.value = formatNum(val);
-    });
-
-    btnDel.addEventListener('click', ()=>{
-      const o = activeOrder(); if (!o) return;
-      const idx = Array.from(tr.parentElement.children).indexOf(tr);
-      o.data.rows.splice(idx,1);
-      tr.remove(); touch(o); recalcAndRender();
-    });
-
+    const last = o.data.rows[o.data.rows.length-1];
+    tr.querySelector('.name').value = last.name||'';
+    tr.querySelector('.group').value = last.group||'khac';
+    tr.querySelector('.colorText').value = last.color||'';
+    tr.querySelector('.colorHex').value = last.colorHex||'#ffffff';
+    tr.querySelector('.swatch').style.background = last.colorHex||'#ffffff';
+    tr.querySelector('.mper').value = last.mper||'';
+    tr.querySelector('.ipr').value = last.ipr||'';
+    tr.querySelector('.demand').value = last.demand||'';
     el('#rows').appendChild(tr);
+    setTimeout(()=> tr.querySelector('.name').focus(), 0);
+    tr.scrollIntoView({block:'nearest'});
+    recalcAndRender();
   }
 
   function calcTotals(data){
@@ -519,33 +514,33 @@
         <td style="display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${r.colorHex};border:1px solid #fff6"></span>${r.color}</td>
         <td style="text-align:center">${r.mper}</td>
         <td style="text-align:center">${r.ipr}</td>
-        <td style="text-align:center">${formatNum(r.demand)}</td>
+        <td style="text-align:center">${r.demand}</td>
         <td style="text-align:center">${r.runs}</td>
         <td style="text-align:center">${r.meters.toFixed(2)}</td>
-        <td style="text-align:right;color:var(--neon)">${Intl.NumberFormat('vi-VN').format(Math.round(r.money))}</td>`;
+        <td style="text-align:right;color:var(--neon)">${fmt.format(Math.round(r.money))}</td>`;
       pr.appendChild(tr);
     });
-    document.getElementById('tRuns').textContent = o.totals.totalRuns;
-    document.getElementById('tMeters').textContent = o.totals.totalMeters.toFixed(2);
-    document.getElementById('tDemand').textContent = formatNum(o.totals.totalDemand);
-    document.getElementById('gNhiMeters').textContent = (o.totals.groupMeters.nhi||0).toFixed(2);
-    document.getElementById('gDaiMeters').textContent = (o.totals.groupMeters.dai||0).toFixed(2);
-    document.getElementById('tSubtotal').textContent = Intl.NumberFormat('vi-VN').format(Math.round(o.totals.subtotal));
-    document.getElementById('tDesign').textContent = Intl.NumberFormat('vi-VN').format(Math.round(activeOrder().data.designFee||0));
-    document.getElementById('tShip').textContent = Intl.NumberFormat('vi-VN').format(Math.round(activeOrder().data.shippingFee||0));
-    document.getElementById('tTotal').textContent = Intl.NumberFormat('vi-VN').format(Math.round(o.totals.total)) + ' đ';
+    el('#tRuns').textContent = o.totals.totalRuns;
+    el('#tMeters').textContent = o.totals.totalMeters.toFixed(2);
+    el('#tDemand').textContent = o.totals.totalDemand;
+    el('#gNhiMeters').textContent = (o.totals.groupMeters.nhi||0).toFixed(2);
+    el('#gDaiMeters').textContent = (o.totals.groupMeters.dai||0).toFixed(2);
+    el('#tSubtotal').textContent = fmt.format(Math.round(o.totals.subtotal));
+    el('#tDesign').textContent = fmt.format(Math.round(activeOrder().data.designFee||0));
+    el('#tShip').textContent = fmt.format(Math.round(activeOrder().data.shippingFee||0));
+    el('#tTotal').textContent = fmt.format(Math.round(o.totals.total)) + ' đ';
 
-    const wrap = document.getElementById('printImages'); wrap.innerHTML='';
+    const wrap = el('#printImages'); wrap.innerHTML='';
     (o.data.images||[]).forEach(img=>{
       const d = document.createElement('div');
       d.className = 'thumb';
       d.innerHTML = `<img src="${img.dataUrl}" alt=""><div class="bar"><div class="muted" style="font-size:12px">${img.name||''}</div></div>`;
       wrap.appendChild(d);
     });
-    document.getElementById('printImagesWrap').style.display = (o.data.images && o.data.images.length) ? 'block' : 'none';
+    el('#printImagesWrap').style.display = (o.data.images && o.data.images.length) ? 'block' : 'none';
   }
 
-  document.getElementById('orderImages').addEventListener('change', async (e)=>{
+  el('#orderImages').addEventListener('change', async (e)=>{
     const o = activeOrder(); if(!o) return;
     const files = Array.from(e.target.files||[]);
     for (const f of files){
@@ -555,7 +550,7 @@
     touch(o); renderImages(); recalcAndRender();
     e.target.value = '';
   });
-  document.getElementById('btnClearImages').addEventListener('click', ()=>{
+  el('#btnClearImages').addEventListener('click', ()=>{
     const o = activeOrder(); if(!o) return;
     if (!o.data.images?.length) return;
     if (!confirm('Xoá toàn bộ ảnh đính kèm?')) return;
@@ -563,7 +558,7 @@
   });
   function renderImages(){
     const o = activeOrder(); if(!o) return;
-    const grid = document.getElementById('imageGrid'); grid.innerHTML='';
+    const grid = el('#imageGrid'); grid.innerHTML='';
     (o.data.images||[]).forEach(img=>{
       const d = document.createElement('div');
       d.className = 'thumb';
@@ -574,8 +569,6 @@
           <button class="btn danger" style="padding:.35rem .5rem">X</button>
         </div>`;
       const input = d.querySelector('input');
-      // Cải tiến: Dùng Debounce cho việc đổi tên ảnh
-      input.addEventListener('input', debouncedRecalcAndTouch.bind(null, o)); 
       input.addEventListener('change', ()=>{ img.name = input.value; touch(o); recalcAndRender(); });
       d.querySelector('button').addEventListener('click', ()=>{
         o.data.images = o.data.images.filter(x=> x.id!==img.id);
@@ -586,24 +579,36 @@
   }
   function fileToDataURL(file){ return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file); }); }
 
+  function setWM(show){
+    el('#wmFx').style.display = show ? 'block' : 'none';
+    el('#wmText').style.display = show ? 'grid' : 'none';
+  }
+  function beforeExport(){
+    setWM(el('#wmToggle').checked);
+  }
+  function afterExport(){ setWM(false); }
+
   function downloadData(dataUrl, name){ const a=document.createElement('a'); a.href=dataUrl; a.download=name; a.click(); }
   function downloadUrl(url, name){ const a=document.createElement('a'); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000); }
 
   async function exportPNG(){
-    const area = document.getElementById('printArea');
-    if (!window.html2canvas){ alert('Thiếu thư viện xuất PNG (html2canvas).'); return; }
-    const o = activeOrder(); if(!o) return;
+    beforeExport();
+    const area = el('#printArea');
+    if (!window.html2canvas){ alert('Thiếu thư viện xuất PNG (html2canvas).'); afterExport(); return; }
+    const o = activeOrder(); if(!o){ afterExport(); return; }
     const canvas = await html2canvas(area, {backgroundColor:'#0b0f14', scale:2});
     const data = canvas.toDataURL('image/png');
     downloadData(data, `Bao-gia-${o.data.customer||'khach'}.png`);
     const arr = fget(o.id);
     arr.unshift({id:uid(), kind:'png', name:`Bao-gia-${o.data.customer||'khach'}.png`, createdAt:nowISO(), dataUrl:data});
     fset(o.id, arr.slice(0,50)); renderFiles();
+    afterExport();
   }
   async function exportPDF(){
-    if (!window.html2canvas || !(window.jspdf && window.jspdf.jsPDF)){ alert('Thiếu thư viện PDF (html2canvas + jsPDF).'); return; }
-    const o = activeOrder(); if(!o) return;
-    const area = document.getElementById('printArea');
+    beforeExport();
+    if (!window.html2canvas || !(window.jspdf && window.jspdf.jsPDF)){ alert('Thiếu thư viện PDF (html2canvas + jsPDF).'); afterExport(); return; }
+    const o = activeOrder(); if(!o){ afterExport(); return; }
+    const area = el('#printArea');
     const canvas = await html2canvas(area, {backgroundColor:'#0b0f14', scale:2});
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({unit:'pt', format:'a4'});
@@ -615,11 +620,12 @@
     const fr = new FileReader();
     fr.onload = ()=>{ const arr=fget(o.id); arr.unshift({id:uid(),kind:'pdf',name:`Bao-gia-${o.data.customer||'khach'}.pdf`,createdAt:nowISO(),dataUrl:fr.result}); fset(o.id,arr.slice(0,50)); renderFiles(); };
     fr.readAsDataURL(b);
+    afterExport();
   }
 
   function renderFiles(){
     const o = activeOrder(); if(!o) return;
-    const box = document.getElementById('fileList'); box.innerHTML='';
+    const box = el('#fileList'); box.innerHTML='';
     const arr = fget(o.id);
     for (const f of arr){
       const card = document.createElement('div');
@@ -645,48 +651,43 @@
     }
   }
 
-  document.getElementById('btnSave').addEventListener('click', ()=> save());
-  document.getElementById('btnDuplicateOrder').addEventListener('click', duplicateOrder);
-  document.getElementById('btnDeleteOrder').addEventListener('click', deleteOrder);
-  document.getElementById('btnNewOrder').addEventListener('click', newOrder);
-  document.getElementById('btnExportPNG').addEventListener('click', exportPNG);
-  document.getElementById('btnExportPDF').addEventListener('click', exportPDF);
-  document.getElementById('searchOrders').addEventListener('input', renderOrderList);
-  document.getElementById('sortOrders').addEventListener('change', renderOrderList);
+  el('#btnSave').addEventListener('click', ()=> save());
+  el('#btnDuplicateOrder').addEventListener('click', duplicateOrder);
+  el('#btnDeleteOrder').addEventListener('click', deleteOrder);
+  el('#btnNewOrder').addEventListener('click', newOrder);
+  el('#btnExportPNG').addEventListener('click', exportPNG);
+  el('#btnExportPDF').addEventListener('click', exportPDF);
+  el('#searchOrders').addEventListener('input', renderOrderList);
+  el('#sortOrders').addEventListener('change', renderOrderList);
 
   ['customer','customerCode','productCode','unitPrice','designFee','shippingFee','note','label'].forEach(id=>{
-    document.getElementById(id).addEventListener('input', (e)=>{
+    el('#'+id).addEventListener('input', ()=>{
       const o = activeOrder(); if (!o) return;
-      const v = e.target.value;
-      if (['unitPrice','designFee','shippingFee'].includes(id)) {
-        o.data[id] = parseNum(v);
-        // Cải tiến: Dùng Debounce
-        debouncedRecalcAndTouch(o);
-      } else {
-        o.data[id] = v;
-        // Cập nhật thông tin nhanh không cần Debounce
-        if (id==='productCode') document.getElementById('pcode').textContent = v;
-        if (id==='customer'||id==='customerCode') document.getElementById('headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
-        if (id==='note') document.getElementById('tNote').textContent = v;
-        touch(o); // Lưu trực tiếp cho các trường chữ
-      }
+      const v = el('#'+id).value;
+      if (['unitPrice','designFee','shippingFee'].includes(id)) o.data[id] = parseNum(v);
+      else o.data[id] = v;
+      if (id==='productCode') el('#pcode').textContent = v;
+      if (id==='customer'||id==='customerCode') el('#headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
+      if (id==='note') el('#tNote').textContent = v;
+      touch(o); recalcAndRender();
     });
-
-    // Bổ sung: Format số khi thoát khỏi trường nhập liệu lớn (Giá, Phí)
-    if (['unitPrice','designFee','shippingFee'].includes(id)){
-        document.getElementById(id).addEventListener('blur', (e) => {
-            const val = parseNum(e.target.value);
-            e.target.value = formatNum(val);
-        });
-    }
   });
 
-  document.getElementById('btnAddPresetNhi').addEventListener('click', ()=> addRowUI({name:'Nhí 8cm', group:'nhi', color:'', colorHex:'#ffffff', mper:0.31, ipr:16, demand:0}));
-  document.getElementById('btnAddPresetDai').addEventListener('click', ()=> addRowUI({name:'Đại 9cm', group:'dai', color:'', colorHex:'#ffffff', mper:0.39, ipr:13, demand:0}));
-  document.getElementById('btnAddRow').addEventListener('click', ()=> addRowUI({group:'khac', colorHex:'#ffffff'}));
+  el('#btnAddPresetNhi').addEventListener('click', ()=> addRow({name:'Nhí 8cm', group:'nhi', color:'', colorHex:'#ffffff', mper:0.31, ipr:16, demand:0}));
+  el('#btnAddPresetDai').addEventListener('click', ()=> addRow({name:'Đại 9cm', group:'dai', color:'', colorHex:'#ffffff', mper:0.39, ipr:13, demand:0}));
+  el('#btnAddRow').addEventListener('click', ()=> addRow({group:'khac', colorHex:'#ffffff'}));
 
   load();
-  if (!state.orders.length) newOrder(); else { renderOrderList(); bindOrder(activeOrder()); }
+  if (!state.orders.length){
+    const id = uid();
+    state.orders = [{
+      id, createdAt: nowISO(), updatedAt: nowISO(),
+      data: {customer:'', customerCode:'', productCode:'', unitPrice:0, designFee:0, shippingFee:0, note:'', label:'new', rows:[], images:[]},
+      totals: {}
+    }];
+    state.activeId = id; save();
+  }
+  renderOrderList(); bindOrder(activeOrder());
 })();
 </script>
 </body>
