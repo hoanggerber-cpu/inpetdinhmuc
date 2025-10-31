@@ -1,374 +1,1255 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>IN PET PHÚC HOÀNG • Báo giá Pro</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0b0f14; --panel:#0f141c; --line:#1d2836;
-  --text:#e7f4ff; --muted:#9db2c8; --brand:#00e0ff; --ok:#00ffa3; --danger:#ff5470;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:#0b0f14;color:var(--text)}
-a{color:inherit}
-.hdr{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 14px}
-.badge{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#051e2a;color:#00efff;font-weight:900}
-.hdr .title{display:flex;flex-direction:column}
-.hdr .title b{font-size:18px}
-.hdr .title small{color:var(--muted);font-weight:600}
-.tabs{margin-left:auto;display:flex;gap:6px}
-.tab{background:#101826;border:1px solid #1f2a38;color:#cfeaff;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
-.tab.act{border-color:#27435d;box-shadow:0 0 0 1px rgba(0,224,255,.15);color:#e9fbff}
-.wrap{max-width:1200px;margin:18px auto;padding:0 16px;display:grid;gap:16px}
-.card{background:linear-gradient(180deg,#0f141c,#0b1119);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.45);padding:16px}
-.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-label{font-size:12px;color:var(--muted);margin:0 0 6px 2px;display:block}
-input,select,textarea{width:100%;background:#0a1017;color:#e7f4ff;border:1px solid #1b2736;padding:10px 12px;border-radius:12px;outline:none}
-input:focus,select:focus,textarea:focus{border-color:#244059;box-shadow:0 0 0 1px rgba(0,224,255,.18)}
-.btn{background:linear-gradient(180deg,#0be,#079);color:#00151a;border:none;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer}
-.btn.gray{background:linear-gradient(180deg,#121a26,#0f1621);color:#cfe8ff;border:1px solid #1f2a38}
-.btn.red{background:linear-gradient(180deg,#ff6b8a,#ff5470);color:white}
-.kit{display:flex;gap:8px;flex-wrap:wrap}
-.tag{display:inline-flex;align-items:center;gap:8px;border:1px solid #203144;background:#0b1119;padding:6px 10px;border-radius:999px;font-size:13px}
-hr{border:0;border-top:1px dashed #1e2a3b;margin:10px 0}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo giá In Pet Phúc Hoàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* iOS-style Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 31px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider {
+            background-color: #34C759;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        input:disabled + .slider {
+            background-color: #e9e9e9 !important;
+        }
+        
+        /* Color Swatches for Status */
+        .color-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+        .color-swatch.active {
+            border-color: white;
+            box-shadow: 0 0 0 3px #3b82f6; /* Ring-like effect with blue */
+        }
+        .option-color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
 
-/* Bảng hàng – rộng hơn để dễ gõ */
-.headrow,.row{
-  display:grid;
-  grid-template-columns:1.2fr .8fr 1fr 1fr 1fr .9fr 1fr 1.1fr 140px 40px;
-  gap:10px; align-items:center; min-width:0;
-}
-.headrow{font-size:12px;color:#a5b7ce;padding:6px 8px}
-.row{padding:10px;background:#0c121a;border:1px solid #1b2736;border-radius:12px}
-.row input,.row select{height:40px;min-width:0}
-.row .del{display:grid;place-items:center;border-radius:10px;background:#0f1621;border:1px solid #2a3647;color:#9fb3c9;cursor:pointer}
-.thumb{width:100%;height:40px;border:1px dashed #2a3647;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 8px}
-.thumb img{height:28px;border-radius:4px}
-.notice{font-size:12px;color:#9db2c8}
-section{display:none}
-section.act{display:block}
 
-/* ====== A4 QUOTE TEMPLATE (xuất PDF) ====== */
-#quoteA4{width:794px;min-height:1123px;background:#fff;color:#111;border:1px solid #ddd;margin:auto;padding:24px 22px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-.q-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #ccc;padding-bottom:10px}
-.q-sub{font-size:12px;color:#444}
-.q-title{font-weight:800;font-size:18px}
-.q-meta{font-size:12px;text-align:right}
-.q-table{width:100%;border-collapse:collapse;margin-top:12px}
-.q-table th,.q-table td{border:1px solid #ccc;font-size:12px;padding:6px 6px;vertical-align:middle}
-.q-table th{background:#f3f5f8}
-.q-img{width:260px;height:160px;object-fit:contain;border:1px solid #ddd}
-.q-total{width:100%;border-collapse:collapse;margin-top:16px}
-.q-total td{border:1px solid #ccc;font-size:12px;padding:6px}
-.q-total td:first-child{width:220px;background:#f8f9fb}
-.q-grand{font-weight:800}
-.q-note{font-size:11px;color:#333;margin-top:14px;border-top:1px solid #ddd;padding-top:8px}
-</style>
+        /* Print/Export Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-quote, #printable-quote * {
+                visibility: visible;
+            }
+            #printable-quote {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 16mm;
+            }
+            body {
+                font-size: 12px;
+            }
+        }
+        #printable-quote.hide-unit-price .unit-price-col-print {
+            display: none;
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800">
 
-<div class="hdr">
-  <div class="badge">PH</div>
-  <div class="title"><b>IN PET PHÚC HOÀNG • Báo giá Pro</b><small>Dark Neon • UI + Export</small></div>
-  <div class="tabs">
-    <button class="tab act" data-tab="compose">Soạn báo giá</button>
-    <button class="tab" data-tab="settings">Cài đặt</button>
-    <button class="tab" data-tab="preview">Xem file báo giá</button>
-  </div>
-</div>
+    <div class="container mx-auto max-w-4xl p-4 pb-32">
+        <header class="text-center my-6">
+            <h1 class="text-3xl font-bold text-gray-900">Báo giá In Pet Phúc Hoàng</h1>
+        </header>
 
-<div class="wrap">
-  <!-- Soạn báo giá -->
-  <section id="compose" class="act">
-    <div class="grid2">
-      <div class="card">
-        <div class="grid2">
-          <div><label>Khách hàng</label><input id="khach" placeholder="VD: PHUONG"/></div>
-          <div><label>Số báo giá</label><input id="soBg" placeholder="VD: BG001"/></div>
-        </div>
-        <div class="grid2" style="margin-top:10px">
-          <div><label>Mã hàng (thư mục / tên file)</label><input id="maHang" placeholder="VD: DECAL-CHU-CUTE"/></div>
-          <div><label>Đơn giá / mét (VND)</label><input id="donGia" type="text" inputmode="decimal" value="150000"/></div>
-        </div>
-        <div class="grid2" style="margin-top:10px">
-          <div><label>Phí thiết kế</label><input id="phiTk" type="text" inputmode="decimal" value="0"/></div>
-          <div><label>Phí vận chuyển</label><input id="phiVc" type="text" inputmode="decimal" value="0"/></div>
-        </div>
-        <div style="margin-top:10px">
-          <label>Ghi chú / Điều khoản</label>
-          <textarea id="ghiChu" rows="3" placeholder="Điều khoản thanh toán…"></textarea>
-        </div>
-        <div class="kit" style="margin-top:12px">
-          <button class="btn" id="btnExport">Xuất PDF</button>
-          <span class="tag"><input type="checkbox" id="wm" checked/> Watermark khi xuất</span>
-        </div>
-        <div class="notice" style="margin-top:8px">Upload ảnh ở từng hàng để hiển thị trong cột “Hình ảnh”.</div>
-      </div>
+        <!-- Quản lý Đơn hàng -->
+        <section class="bg-white rounded-xl shadow-sm p-3 md:p-4 mb-6">
+             <details open>
+                <summary class="text-xl font-semibold cursor-pointer select-none">Quản lý Đơn hàng</summary>
+                <div class="mt-4 pt-4 border-t">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                             <label class="block text-sm font-medium text-gray-600 mb-2">Lọc đơn hàng theo nhãn</label>
+                            <div id="status-color-filter" class="flex flex-wrap gap-2 items-center">
+                                <!-- Color swatches for filtering -->
+                            </div>
+                        </div>
+                        <div class="flex gap-2 h-10">
+                            <button id="new-quote-btn" class="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition">Tạo đơn mới</button>
+                        </div>
+                     </div>
 
-      <div class="card">
-        <div class="kit">
-          <button class="btn gray" id="btnAddNhi">+ Nhí 8cm (16 hình / 0.31m)</button>
-          <button class="btn gray" id="btnAddDai">+ Đại 9cm (13 hình / 0.39m)</button>
-          <button class="btn gray" id="btnAdd">+ Thêm hàng</button>
-        </div>
-        <hr/>
-        <div class="headrow">
-          <div>Tên cụm</div><div>Nhóm</div><div>m/1 lần</div><div>hình/1 lần</div><div>Nhu cầu</div>
-          <div>Số lần in</div><div>Tổng m</div><div>Thành tiền</div><div>Hình ảnh</div><div></div>
-        </div>
-        <div id="rows"></div>
-        <hr/>
-        <div class="kit" id="sumline"></div>
-      </div>
+                    <div id="quote-list-container" class="mt-4 bg-gray-50 rounded-lg p-2 h-48 overflow-y-auto border">
+                        <!-- Quote list items will be rendered here -->
+                    </div>
+                    
+                    <!-- Label Management -->
+                    <div class="mt-4 pt-4 border-t">
+                        <h3 class="text-base font-semibold text-gray-700 mb-2">Quản lý Nhãn</h3>
+                        <div id="label-list-container" class="space-y-2 mb-3">
+                            <!-- Custom labels will be rendered here -->
+                        </div>
+                        <form id="add-label-form" class="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
+                            <input type="color" id="new-label-color" value="#4dabf7" class="h-10 w-12 p-1 bg-white border border-gray-300 rounded-md cursor-pointer">
+                            <input type="text" id="new-label-name" placeholder="Tên nhãn mới" class="flex-1 bg-white border-gray-300 rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500" required>
+                            <button type="submit" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition">Thêm</button>
+                        </form>
+                    </div>
+
+                </div>
+             </details>
+        </section>
+        
+        <!-- Thống kê -->
+        <section class="bg-white rounded-xl shadow-sm p-3 md:p-4 mb-6">
+            <details>
+                <summary class="text-xl font-semibold cursor-pointer select-none">Thống kê Tổng quan</summary>
+                <div id="stats-container" class="mt-4 pt-4 border-t grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Stats will be rendered here -->
+                </div>
+            </details>
+        </section>
+
+        <!-- Cài đặt chung -->
+        <section id="settings-card" class="bg-white rounded-xl shadow-sm p-3 md:p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-4 border-b pb-2">Thông tin Báo giá & Cài đặt</h2>
+             <div class="flex items-center gap-4 mb-4">
+                <label class="block text-sm font-medium text-gray-600">Gán nhãn cho đơn hiện tại</label>
+                <div id="status-color-setter" class="flex flex-wrap gap-2">
+                    <!-- Color swatches for setting status -->
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-4">
+                <!-- Cột trái -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Tên khách hàng</label>
+                    <input type="text" id="customerName" placeholder="Nhập tên khách hàng" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                    
+                    <label class="block text-sm font-medium text-gray-600 mt-3 mb-1">SĐT / ID</label>
+                    <input type="text" id="customerId" placeholder="Nhập SĐT hoặc ID" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                    
+                    <label class="block text-sm font-medium text-gray-600 mt-3 mb-1">Mã đơn / Job code</label>
+                    <input type="text" id="jobCode" placeholder="Nhập mã đơn" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+
+                    <label class="block text-sm font-medium text-gray-600 mt-3 mb-1">Ghi chú</label>
+                    <textarea id="quoteNotes" rows="3" placeholder="Thêm ghi chú hoặc điều khoản..." class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+
+                <!-- Cột phải -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Đơn giá (đ/m)</label>
+                    <input type="text" inputmode="numeric" id="unitPrice" placeholder="60000" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                    
+                    <div class="grid grid-cols-2 gap-3 mt-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Phí thiết kế</label>
+                            <input type="text" inputmode="numeric" id="designFee" placeholder="0" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Phí vận chuyển</label>
+                            <input type="text" inputmode="numeric" id="shippingFee" placeholder="0" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Logo Cửa hàng</label>
+                        <div class="flex items-center gap-4">
+                             <img id="logo-preview" class="h-16 w-16 object-contain bg-gray-100 rounded-lg p-1" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Logo Preview">
+                            <div class="flex-1">
+                               <input type="file" id="logo-upload" class="hidden" accept="image/png, image/jpeg">
+                               <button onclick="document.getElementById('logo-upload').click()" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition">Tải lên Logo</button>
+                               <button id="remove-logo" class="w-full mt-2 bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition">Xoá Logo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-t my-4"></div>
+                    <h3 class="text-base font-semibold mb-2 text-gray-700">Tuỳ chọn hiển thị báo giá</h3>
+                    <div class="flex items-center justify-between mt-2 p-3 bg-gray-100 rounded-lg">
+                        <label for="optimize-last-run" class="font-medium text-gray-700">Tối ưu lần cuối</label>
+                        <label class="switch">
+                            <input type="checkbox" id="optimize-last-run">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-2 p-3 bg-gray-100 rounded-lg">
+                        <label for="hide-images-in-quote" class="font-medium text-gray-700">Ẩn hình trong báo giá</label>
+                        <label class="switch">
+                            <input type="checkbox" id="hide-images-in-quote">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 p-3 bg-gray-100 rounded-lg">
+                        <label for="hide-unit-price-in-quote" class="font-medium text-gray-700">Ẩn cột Đơn giá</label>
+                        <label class="switch">
+                            <input type="checkbox" id="hide-unit-price-in-quote">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 p-3 bg-gray-100 rounded-lg">
+                        <label for="hide-design-fee-in-quote" class="font-medium text-gray-700">Ẩn Phí thiết kế</label>
+                        <label class="switch">
+                            <input type="checkbox" id="hide-design-fee-in-quote">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 p-3 bg-gray-100 rounded-lg">
+                        <label for="hide-shipping-fee-in-quote" class="font-medium text-gray-700">Ẩn Phí vận chuyển</label>
+                        <label class="switch">
+                            <input type="checkbox" id="hide-shipping-fee-in-quote">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="storage-warning" class="hidden mt-4 p-3 text-sm text-yellow-800 bg-yellow-100 rounded-lg">
+                <strong>Cảnh báo:</strong> Dung lượng lưu trữ cục bộ đã vượt quá 5MB. Trình duyệt có thể hoạt động chậm hoặc mất dữ liệu.
+            </div>
+        </section>
+
+        <!-- Bảng chi tiết -->
+        <section>
+            <h2 class="text-xl font-semibold mb-4">Chi tiết Bố cục</h2>
+            <div id="layouts-container" class="space-y-3">
+                <!-- Layout rows will be inserted here -->
+            </div>
+            <button id="add-row-btn" class="mt-4 w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                Thêm Sản phẩm / Bố cục
+            </button>
+        </section>
     </div>
-  </section>
 
-  <!-- Cài đặt -->
-  <section id="settings">
-    <div class="card">
-      <div class="grid2">
-        <div><label>Ngày báo giá</label><input id="ngay" type="date"/></div>
-        <div><label>SĐT/ID Khách</label><input id="sdt" placeholder="SĐT/ID"/></div>
-      </div>
-      <div class="notice" style="margin-top:8px">Có thể mở rộng kết nối Drive sau; hiện tại app hoạt động độc lập, xuất PDF tại chỗ.</div>
+    <!-- Thanh tổng kết cố định -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-2 shadow-lg">
+        <div class="container mx-auto max-w-4xl flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <button id="print-quote-btn" class="bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition disabled:bg-blue-400 disabled:cursor-wait">Tải Báo giá (PNG)</button>
+            </div>
+            
+            <div class="flex items-center gap-2 sm:gap-4 text-right ml-auto">
+                 <div class="hidden md:block text-center">
+                    <div class="text-xs text-gray-500">Tổng mét</div>
+                    <div id="total-meters" class="text-base font-bold text-gray-900">0</div>
+                </div>
+                 <div class="hidden sm:block text-center">
+                    <div class="text-xs text-gray-500">Giá TB/hình</div>
+                    <div id="avg-price-per-image" class="text-base font-bold text-blue-600">0 đ</div>
+                </div>
+                <div class="p-1 rounded-lg bg-blue-50">
+                    <div class="text-xs text-blue-700">TỔNG TIỀN</div>
+                    <div id="total-price" class="text-lg font-extrabold text-blue-800">0 đ</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Template cho một dòng layout -->
+    <template id="layout-row-template">
+        <div class="layout-row bg-white rounded-xl shadow-sm p-3">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-x-3 gap-y-2 mb-3 items-start">
+                <input type="text" data-field="name" placeholder="Tên sản phẩm (VD: Áo NHÍ)" class="text-base font-semibold bg-gray-100 border-none rounded-md p-2 w-full md:col-span-2 focus:ring-2 focus:ring-blue-500">
+                <input type="text" data-field="color" placeholder="Màu sắc/Loại (VD: Trắng)" class="text-base bg-gray-100 border-none rounded-md p-2 w-full md:col-span-2 focus:ring-2 focus:ring-blue-500">
+                <div class="flex justify-end">
+                    <button class="remove-row-btn p-2 text-red-500 hover:bg-red-100 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500">m / 1 lần</label>
+                    <input type="text" inputmode="decimal" data-field="mPerRun" placeholder="0.160" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500">hình / 1 lần</label>
+                    <input type="text" inputmode="numeric" data-field="imgPerRun" placeholder="3" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500">Nhu cầu hình</label>
+                    <input type="text" inputmode="numeric" data-field="demand" placeholder="600" class="w-full bg-gray-100 border-none rounded-lg p-2 text-base focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <!-- Image Upload Section -->
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-500 mb-2">Hình ảnh (tối đa 3)</label>
+                <div class="flex items-center gap-2">
+                    <div class="image-previews flex gap-2"></div>
+                    <label class="upload-btn-wrapper">
+                        <input type="file" class="hidden" accept="image/png, image/jpeg" multiple>
+                        <div class="flex items-center justify-center w-16 h-16 bg-gray-200 text-gray-500 rounded-lg cursor-pointer hover:bg-gray-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-2 rounded-lg grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2 text-center">
+                <div>
+                    <p class="text-xs text-gray-500">Số lần in</p>
+                    <p class="font-bold text-base" data-output="runs">0</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Tổng mét</p>
+                    <p class="font-bold text-base" data-output="totalMeters">0</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Thành tiền</p>
+                    <p class="font-bold text-base text-green-600" data-output="subtotal">0 đ</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Dư/Thiếu</p>
+                    <p class="font-bold text-base" data-output="surplus">0</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Vùng in ẩn -->
+    <div id="printable-quote" class="p-4 hidden bg-white">
+        <header class="flex justify-between items-start mb-8 border-b-2 border-gray-800 pb-4">
+            <div class="flex items-center">
+                <img id="print-logo" class="h-20 w-20 object-contain mr-4" alt="Logo">
+                <div>
+                    <h1 class="text-2xl font-bold">IN PET PHÚC HOÀNG</h1>
+                    <p>Điện thoại: 09xx xxx xxx</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <h2 class="text-3xl font-bold mb-2">BÁO GIÁ</h2>
+                <p><strong>Ngày:</strong> <span id="print-date"></span></p>
+                <p><strong>Số Báo giá:</strong> <span id="print-jobCode"></span></p>
+                <p><strong>Khách hàng:</strong> <span id="print-customerName"></span></p>
+                <p><strong>SĐT/ID:</strong> <span id="print-customerId"></span></p>
+            </div>
+        </header>
+
+        <main>
+            <table class="w-full text-left border-collapse mb-8">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="p-2 border border-gray-400">#</th>
+                        <th class="p-2 border border-gray-400">Tên sản phẩm</th>
+                        <th class="p-2 border border-gray-400">Màu sắc/Loại</th>
+                        <th class="p-2 border border-gray-400 image-col-print">Hình ảnh</th>
+                        <th class="p-2 border border-gray-400 text-right">m/1 lần</th>
+                        <th class="p-2 border border-gray-400 text-right">hình/1 lần</th>
+                        <th class="p-2 border border-gray-400 text-right">Nhu cầu</th>
+                        <th class="p-2 border border-gray-400 text-right">Số lần in</th>
+                        <th class="p-2 border border-gray-400 text-right">Tổng mét</th>
+                        <th class="p-2 border border-gray-400 text-right unit-price-col-print">Đơn giá</th>
+                        <th class="p-2 border border-gray-400 text-right">Thành tiền</th>
+                        <th class="p-2 border border-gray-400 text-right">Dư/Thiếu</th>
+                    </tr>
+                </thead>
+                <tbody id="print-table-body">
+                    <!-- Print rows will be inserted here -->
+                </tbody>
+            </table>
+        </main>
+
+        <footer class="mt-8 pt-4 border-t-2 border-gray-800">
+            <div class="flex justify-end">
+                <div class="w-1/2">
+                    <h3 class="text-xl font-bold mb-2">Tổng kết</h3>
+                    <table class="w-full">
+                        <tbody id="print-summary-body">
+                            <tr class="border-b">
+                                <td class="py-1 pr-4">Tổng lần in:</td>
+                                <td class="py-1 font-bold text-right" id="print-total-runs"></td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-1 pr-4">Tổng mét sản xuất:</td>
+                                <td class="py-1 font-bold text-right" id="print-total-meters"></td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-1 pr-4">Tổng hình sản xuất:</td>
+                                <td class="py-1 font-bold text-right" id="print-total-images"></td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-1 pr-4">Giá trung bình / 1 hình:</td>
+                                <td class="py-1 font-bold text-right" id="print-avg-price"></td>
+                            </tr>
+                             <tr class="border-b hidden" id="print-design-fee-row">
+                                <td class="py-1 pr-4">Phí thiết kế:</td>
+                                <td class="py-1 font-bold text-right" id="print-design-fee"></td>
+                            </tr>
+                            <tr class="border-b hidden" id="print-shipping-fee-row">
+                                <td class="py-1 pr-4">Phí vận chuyển:</td>
+                                <td class="py-1 font-bold text-right" id="print-shipping-fee"></td>
+                            </tr>
+                            <tr class="bg-gray-200 text-lg">
+                                <td class="py-2 pr-4 font-bold">TỔNG CỘNG:</td>
+                                <td class="py-2 font-extrabold text-right" id="print-total-price"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h4 class="font-bold mb-2">Ghi chú / Điều khoản:</h4>
+                <p id="print-notes" class="whitespace-pre-wrap"></p>
+            </div>
+        </footer>
     </div>
-  </section>
 
-  <!-- Preview -->
-  <section id="preview">
-    <div class="card"><div id="quoteA4"></div></div>
-  </section>
-</div>
 
-<!-- libs -->
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script>
-const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+    <script type="module">
+        const DOM = {
+            // Quote Management
+            quoteListContainer: document.getElementById('quote-list-container'),
+            newQuoteBtn: document.getElementById('new-quote-btn'),
+            statusColorSetter: document.getElementById('status-color-setter'),
+            statusColorFilter: document.getElementById('status-color-filter'),
+            // Label Management
+            addLabelForm: document.getElementById('add-label-form'),
+            newLabelColor: document.getElementById('new-label-color'),
+            newLabelName: document.getElementById('new-label-name'),
+            labelListContainer: document.getElementById('label-list-container'),
+            // Stats
+            statsContainer: document.getElementById('stats-container'),
+            // Layouts
+            layoutsContainer: document.getElementById('layouts-container'),
+            addRowBtn: document.getElementById('add-row-btn'),
+            layoutRowTemplate: document.getElementById('layout-row-template'),
+            // Settings
+            customerName: document.getElementById('customerName'),
+            customerId: document.getElementById('customerId'),
+            jobCode: document.getElementById('jobCode'),
+            unitPrice: document.getElementById('unitPrice'),
+            designFee: document.getElementById('designFee'),
+            shippingFee: document.getElementById('shippingFee'),
+            quoteNotes: document.getElementById('quoteNotes'),
+            logoUpload: document.getElementById('logo-upload'),
+            logoPreview: document.getElementById('logo-preview'),
+            removeLogoBtn: document.getElementById('remove-logo'),
+            optimizeLastRun: document.getElementById('optimize-last-run'),
+            hideImagesInQuote: document.getElementById('hide-images-in-quote'),
+            hideUnitPriceInQuote: document.getElementById('hide-unit-price-in-quote'),
+            hideDesignFeeInQuote: document.getElementById('hide-design-fee-in-quote'),
+            hideShippingFeeInQuote: document.getElementById('hide-shipping-fee-in-quote'),
+            storageWarning: document.getElementById('storage-warning'),
+            // Summary
+            totalMeters: document.getElementById('total-meters'),
+            avgPricePerImage: document.getElementById('avg-price-per-image'),
+            totalPrice: document.getElementById('total-price'),
+            // Actions
+            printQuoteBtn: document.getElementById('print-quote-btn'),
+            // Printable area
+            printableQuote: document.getElementById('printable-quote'),
+            printLogo: document.getElementById('print-logo'),
+            printDate: document.getElementById('print-date'),
+            printJobCode: document.getElementById('print-jobCode'),
+            printCustomerName: document.getElementById('print-customerName'),
+            printCustomerId: document.getElementById('print-customerId'),
+            printTableBody: document.getElementById('print-table-body'),
+            printTotalRuns: document.getElementById('print-total-runs'),
+            printTotalMeters: document.getElementById('print-total-meters'),
+            printTotalImages: document.getElementById('print-total-images'),
+            printAvgPrice: document.getElementById('print-avg-price'),
+            printDesignFeeRow: document.getElementById('print-design-fee-row'),
+            printDesignFee: document.getElementById('print-design-fee'),
+            printShippingFeeRow: document.getElementById('print-shipping-fee-row'),
+            printShippingFee: document.getElementById('print-shipping-fee'),
+            printTotalPrice: document.getElementById('print-total-price'),
+            printNotes: document.getElementById('print-notes'),
+        };
 
-// ===== số & util =====
-const VND = n => (n||0).toLocaleString('vi-VN');
-const num = (x) => {                       // nhận cả 1,23 hoặc 1.23
-  if (x === undefined || x === null) return 0;
-  const s = String(x).replace(/,/g,'.').replace(/[^\d.\-]/g,'');
-  const v = parseFloat(s);
-  return isNaN(v)?0:v;
-};
-const ceil=(a,b)=>b>0?Math.ceil(a/b):0;
-const r2=v=>Math.round(v*100)/100;
+        const STORAGE_KEY = 'inPetPhucHoangData_v2';
+        const STORAGE_LIMIT_MB = 5;
+        
+        let globalState = {
+            activeQuoteId: null,
+            quotes: {},
+            activeColorFilter: 'all',
+            statusLabels: [ // Default labels
+                { color: '#868e96', name: 'Mặc định' },
+                { color: '#228be6', name: 'Mới' },
+                { color: '#fab005', name: 'Đang cọc' },
+                { color: '#12b886', name: 'Hoàn thành' },
+                { color: '#e03131', name: 'Huỷ/Gấp' }
+            ],
+        };
 
-const state={rows:[]};
+        // --- UTILITY FUNCTIONS ---
+        const formatCurrency = (value) => {
+            if (isNaN(value)) return '0 đ';
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        };
 
-function addRow(preset){
-  const r=Object.assign({name:'',group:'nhí',mPerRun:'',imgPerRun:'',demand:'',runs:0,totalM:0,money:0,image:''},preset||{});
-  state.rows.push(r);
-  renderRows(); calc();
-}
+        const fileToBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
 
-function fileToDataURL(file){
-  return new Promise(res=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file);});
-}
+        const createDefaultQuote = (id) => ({
+            id: id,
+            createdAt: new Date().toISOString(),
+            statusColor: globalState.statusLabels[0]?.color || '#868e96', // Default color
+            settings: {
+                unitPrice: 60000, designFee: '', shippingFee: '',
+                optimizeLastRun: true, hideImagesInQuote: false, hideUnitPriceInQuote: false,
+                hideDesignFeeInQuote: false, hideShippingFeeInQuote: false,
+                quoteNotes: 'Điều khoản thanh toán: ...',
+            },
+            quoteInfo: { customerName: '', customerId: '', jobCode: '', logoDataUrl: '' },
+            layouts: [
+                { id: Date.now() + 1, name: 'NHÍ', color: 'Trắng', mPerRun: 0.160, imgPerRun: 3, demand: 600, images: [] },
+                { id: Date.now() + 2, name: 'ĐẠI', color: 'Đen', mPerRun: 0.480, imgPerRun: 4, demand: 400, images: [] },
+            ],
+            summary: {},
+        });
 
-// ===== render hàng (inputs type="text" để gõ thoải mái) =====
-function renderRows(){
-  const box=$('#rows'); box.innerHTML='';
-  state.rows.forEach((r,idx)=>{
-    const row=document.createElement('div'); row.className='row';
-    row.innerHTML=`
-      <input class="name" placeholder="Tên cụm" value="${r.name||''}"/>
-      <select class="group">
-        <option value="nhí">nhí</option><option value="đại">đại</option><option value="khác">khác</option>
-      </select>
-      <input class="mpr" type="text" inputmode="decimal" placeholder="m/1 lần" value="${r.mPerRun||''}"/>
-      <input class="ipr" type="text" inputmode="numeric" placeholder="hình/1 lần" value="${r.imgPerRun||''}"/>
-      <input class="dem" type="text" inputmode="numeric" placeholder="nhu cầu (hình)" value="${r.demand||''}"/>
-      <input class="runs" readonly placeholder="—"/>
-      <input class="tm" readonly placeholder="—"/>
-      <input class="money" readonly placeholder="—"/>
-      <label class="thumb">
-        ${r.image?`<img src="${r.image}"/>`:`<span style="color:#7aa2c8">Chọn ảnh…</span>`}
-        <input class="file" type="file" accept="image/*" style="display:none"/>
-      </label>
-      <div class="del">✕</div>
-    `;
-    box.appendChild(row);
-    row.querySelector('.group').value=r.group;
+        // --- STATE MANAGEMENT ---
+        function getActiveQuote() {
+            return globalState.quotes[globalState.activeQuoteId];
+        }
 
-    row.querySelector('.name').addEventListener('input',e=>{ r.name=e.target.value; });
-    row.querySelector('.group').addEventListener('input',e=>{ r.group=e.target.value; calc(); });
+        function saveState() {
+            try {
+                const stateString = JSON.stringify(globalState);
+                const sizeInMB = (new TextEncoder().encode(stateString).length / 1024 / 1024);
+                DOM.storageWarning.classList.toggle('hidden', sizeInMB <= STORAGE_LIMIT_MB);
+                localStorage.setItem(STORAGE_KEY, stateString);
+            } catch (e) {
+                console.error("Failed to save state:", e);
+                DOM.storageWarning.textContent = 'Lỗi: Không thể lưu dữ liệu. Bộ nhớ có thể đã đầy.';
+                DOM.storageWarning.classList.remove('hidden');
+            }
+        }
 
-    row.querySelector('.mpr').addEventListener('input',e=>{ r.mPerRun=e.target.value; calc(); });
-    row.querySelector('.ipr').addEventListener('input',e=>{ r.imgPerRun=e.target.value; calc(); });
-    row.querySelector('.dem').addEventListener('input',e=>{ r.demand=e.target.value; calc(); });
+        function loadState() {
+            const savedState = localStorage.getItem(STORAGE_KEY);
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                // Migration for statusLabels
+                if (!parsedState.statusLabels) {
+                    parsedState.statusLabels = [ // Old constant values
+                        { color: '#868e96', name: 'Mặc định' },
+                        { color: '#228be6', name: 'Mới' },
+                        { color: '#fab005', name: 'Đang cọc' },
+                        { color: '#12b886', name: 'Hoàn thành' },
+                        { color: '#e03131', name: 'Huỷ/Gấp' }
+                    ];
+                }
+                globalState = parsedState;
 
-    row.querySelector('.file').addEventListener('change', async e=>{
-      const f=e.target.files?.[0]; if(!f) return;
-      r.image=await fileToDataURL(f); renderRows(); calc();
-    });
+                // Migration for older data
+                Object.values(globalState.quotes).forEach(quote => {
+                    if (!quote.statusColor) quote.statusColor = globalState.statusLabels[0].color;
+                    quote.layouts.forEach(layout => {
+                        if (layout.color === undefined) layout.color = '';
+                    })
+                });
+                if (!globalState.activeColorFilter) {
+                    globalState.activeColorFilter = 'all';
+                }
+            }
+            if (Object.keys(globalState.quotes).length === 0) {
+                handleNewQuote(false); // create initial quote without saving yet
+            }
+            if (!globalState.activeQuoteId || !globalState.quotes[globalState.activeQuoteId]) {
+                 globalState.activeQuoteId = Object.keys(globalState.quotes)[0];
+            }
+        }
 
-    row.querySelector('.del').addEventListener('click',()=>{
-      state.rows.splice(idx,1); renderRows(); calc();
-    });
-  });
-}
+        // --- CALCULATION LOGIC ---
+        function calculateAll() {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
 
-// ===== tính toán tổng =====
-function calc(){
-  let sumRuns=0,sumM=0,sumMoney=0,sumImgs=0;
-  const donGia=num($('#donGia').value);
-  state.rows.forEach((r,i)=>{
-    const m=num(r.mPerRun);
-    const ipr=Math.max(1,Math.floor(num(r.imgPerRun)));
-    const dem=Math.max(0,Math.floor(num(r.demand)));
-    const runs=ceil(dem,ipr);
-    const totalM=r2(runs*m);
-    const money=Math.round(totalM*donGia);
-    Object.assign(r,{runs,totalM,money});
-    const rw=$$('#rows .row')[i];
-    if(rw){rw.querySelector('.runs').value=runs; rw.querySelector('.tm').value=totalM; rw.querySelector('.money').value=VND(money);}
-    sumRuns+=runs; sumM+=totalM; sumMoney+=money; sumImgs+=dem;
-  });
-  sumM=r2(sumM);
-  const grand=sumMoney + num($('#phiTk').value)+num($('#phiVc').value);
-  $('#sumline').innerHTML=`
-    <span class="tag">Tổng lần in: <b>${sumRuns}</b></span>
-    <span class="tag">Tổng mét: <b>${sumM} m</b></span>
-    <span class="tag">Tổng hình sản xuất: <b>${sumImgs}</b></span>
-    <span class="tag">Tổng tiền (đã cộng phí): <b>${VND(grand)} đ</b></span>
-  `;
-  buildQuote();
-}
+            let totalRuns = 0, totalMeters = 0, totalImagesProduced = 0, subtotalAllLayouts = 0, totalDemand = 0;
+            const unitPrice = parseFloat(activeQuote.settings.unitPrice) || 0;
 
-// ===== dựng A4 preview =====
-function quoteTotalsHTML(){
-  let sumRuns=0,sumM=0,sumMoney=0,sumImgs=0;
-  const donGia=num($('#donGia').value);
-  state.rows.forEach(r=>{
-    const m=num(r.mPerRun), ipr=Math.max(1,Math.floor(num(r.imgPerRun))), dem=Math.max(0,Math.floor(num(r.demand)));
-    const runs=ceil(dem,ipr), totalM=r2(runs*m), money=Math.round(totalM*donGia);
-    sumRuns+=runs; sumM+=totalM; sumMoney+=money; sumImgs+=dem;
-  });
-  sumM=r2(sumM);
-  const grand=sumMoney + num($('#phiTk').value)+num($('#phiVc').value);
-  const avgPerImg = sumImgs>0 ? Math.round(grand/sumImgs) : 0;
+            activeQuote.layouts.forEach(row => {
+                const mPerRun = parseFloat(String(row.mPerRun).replace(/,/g, '.')) || 0;
+                const imgPerRun = parseInt(row.imgPerRun) || 0;
+                const demand = parseInt(row.demand) || 0;
+                
+                if (imgPerRun > 0 && demand > 0) {
+                    row.runs = Math.ceil(demand / imgPerRun);
+                    row.produced = row.runs * imgPerRun;
+                    row.totalMeters = row.runs * mPerRun;
+                } else {
+                    row.runs = 0;
+                    row.produced = 0;
+                    row.totalMeters = 0;
+                }
+                
+                row.subtotal = row.totalMeters * unitPrice;
+                row.surplus = row.produced - demand;
 
-  return `
-  <table class="q-total">
-    <tr><td>Tổng lần in:</td><td style="text-align:right">${sumRuns}</td></tr>
-    <tr><td>Tổng mét sản xuất:</td><td style="text-align:right">${sumM}</td></tr>
-    <tr><td>Tổng hình sản xuất:</td><td style="text-align:right">${sumImgs}</td></tr>
-    <tr><td>Giá trung bình / 1 hình:</td><td style="text-align:right">${VND(avgPerImg)} đ</td></tr>
-    <tr class="q-grand"><td>TỔNG CỘNG:</td><td style="text-align:right">${VND(grand)} đ</td></tr>
-  </table>`;
-}
+                totalRuns += row.runs;
+                totalMeters += row.totalMeters;
+                totalImagesProduced += row.produced;
+                subtotalAllLayouts += row.subtotal;
+                totalDemand += demand;
+            });
+            
+            const designFee = parseFloat(String(activeQuote.settings.designFee).replace(/,/g, '.')) || 0;
+            const shippingFee = parseFloat(String(activeQuote.settings.shippingFee).replace(/,/g, '.')) || 0;
+            const totalPrice = subtotalAllLayouts + designFee + shippingFee;
+            const avgPricePerImage = totalDemand > 0 ? subtotalAllLayouts / totalDemand : 0;
+            
+            activeQuote.summary = { totalRuns, totalMeters, totalImagesProduced, totalPrice, avgPricePerImage };
+        }
 
-function buildQuote(){
-  const wrap=document.createElement('div');
-  const d=new Date($('#ngay').value || new Date());
-  const dateStr = d instanceof Date ? d.toLocaleDateString('vi-VN') : $('#ngay').value;
+        // --- RENDER FUNCTIONS ---
+        function render() {
+            renderQuoteManager();
+            renderSettings();
+            renderLayouts();
+            renderSummary();
+            calculateAndRenderStatistics();
+            renderLabelManager();
+        }
 
-  wrap.innerHTML=`
-  <div class="q-head">
-    <div>
-      <div class="q-title">BÁO GIÁ</div>
-      <div class="q-sub">IN PET PHÚC HOÀNG<br/>Điện thoại: 09x xxx xxx</div>
-    </div>
-    <div class="q-meta">
-      <div>Ngày: <b>${dateStr}</b></div>
-      <div>Số Báo giá: <b>${($('#soBg').value||'N/A')}</b></div>
-      <div>Khách hàng: <b>${($('#khach').value||'N/A')}</b></div>
-      <div>SĐT/ID: <b>${($('#sdt').value||'N/A')}</b></div>
-    </div>
-  </div>
+        function renderQuoteManager() {
+            const listContainer = DOM.quoteListContainer;
+            listContainer.innerHTML = '';
 
-  <table class="q-table">
-    <thead>
-      <tr>
-        <th style="width:28px">#</th>
-        <th style="width:90px">Tên cụm</th>
-        <th>Hình ảnh</th>
-        <th style="width:48px">m/1 lần</th>
-        <th style="width:55px">hình/1 lần</th>
-        <th style="width:55px">Nhu cầu</th>
-        <th style="width:55px">Số lần in</th>
-        <th style="width:60px">Tổng mét</th>
-        <th style="width:68px">Đơn giá</th>
-        <th style="width:82px">Thành tiền</th>
-        <th style="width:58px">Dư/Thiếu</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${state.rows.map((r,i)=>`
-        <tr>
-          <td>${i+1}</td>
-          <td>${r.name||r.group||''}</td>
-          <td>${r.image?`<img class="q-img" src="${r.image}"/>`:`<div style="width:260px;height:160px;border:1px dashed #bbb;display:grid;place-items:center;color:#888">Không có ảnh</div>`}</td>
-          <td style="text-align:right">${r2(num(r.mPerRun))}</td>
-          <td style="text-align:right">${Math.max(1,Math.floor(num(r.imgPerRun)))}</td>
-          <td style="text-align:right">${Math.max(0,Math.floor(num(r.demand)))}</td>
-          <td style="text-align:right">${r.runs}</td>
-          <td style="text-align:right">${r2(r.totalM)}</td>
-          <td style="text-align:right">${VND(num($('#donGia').value))}</td>
-          <td style="text-align:right">${VND(r.money)}</td>
-          <td style="text-align:center">-</td>
-        </tr>
-      `).join('')}
-    </tbody>
-  </table>
-  ${quoteTotalsHTML()}
-  <div class="q-note"><b>Ghi chú / Điều khoản:</b> ${($('#ghiChu').value||'...')}</div>
-  `;
-  const q=$('#quoteA4'); q.innerHTML=''; q.appendChild(wrap.firstElementChild);
-}
+            const sortedQuotes = Object.values(globalState.quotes)
+                .filter(q => globalState.activeColorFilter === 'all' || q.statusColor === globalState.activeColorFilter)
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            const activeQuoteIsVisible = sortedQuotes.some(q => q.id === globalState.activeQuoteId);
+            if (!activeQuoteIsVisible && sortedQuotes.length > 0) {
+                globalState.activeQuoteId = sortedQuotes[0].id;
+            }
 
-// ===== export PDF =====
-async function exportPDF(){
-  let wm=null;
-  if($('#wm').checked){
-    wm=document.createElement('div');
-    wm.textContent='IN PET PHÚC HOÀNG';
-    wm.style.cssText='position:fixed;inset:0;pointer-events:none;opacity:.06;font-weight:800;font-size:90px;color:#0aa;display:grid;place-items:center;transform:rotate(-20deg)';
-    document.body.appendChild(wm);
-  }
-  buildQuote();
-  const area=$('#quoteA4');
-  const canvas=await html2canvas(area,{backgroundColor:'#fff',scale:2});
-  if(wm) wm.remove();
+            if (sortedQuotes.length === 0) {
+                listContainer.innerHTML = `<div class="text-center text-gray-500 p-4">Không có đơn hàng nào khớp.</div>`;
+            } else {
+                sortedQuotes.forEach(quote => {
+                    const item = document.createElement('div');
+                    item.className = `p-2 mb-1 last:mb-0 rounded-md cursor-pointer flex justify-between items-center transition ${quote.id === globalState.activeQuoteId ? 'bg-blue-500 text-white shadow-md' : 'bg-white hover:bg-blue-50'}`;
+                    item.dataset.quoteId = quote.id;
+                    
+                    const customerName = quote.quoteInfo.customerName || 'Khách lẻ';
+                    const jobCode = quote.quoteInfo.jobCode || 'N/A';
+                    const totalPrice = quote.summary?.totalPrice || 0;
 
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('p','pt','a4');
-  const pageW=pdf.internal.pageSize.getWidth();
-  const imgData=canvas.toDataURL('image/jpeg',0.98);
-  const w=pageW-32, h=canvas.height*(w/canvas.width);
-  pdf.addImage(imgData,'JPEG',16,16,w,h,'','FAST');
-  const name=`BAO-GIA__${($('#maHang').value||'MH')}_${($('#khach').value||'KH')}__${new Date().toISOString().slice(0,10)}.pdf`;
-  pdf.save(name);
-}
+                    item.innerHTML = `
+                        <div class="flex-1 overflow-hidden">
+                            <div class="font-semibold truncate">${customerName}</div>
+                            <div class="text-xs opacity-80">${jobCode}</div>
+                        </div>
+                        <div class="text-right ml-2 flex items-center gap-2">
+                            <div class="font-bold">${formatCurrency(totalPrice)}</div>
+                            <span class="inline-block w-4 h-4 rounded-full border-2 border-white/50 shadow" style="background-color:${quote.statusColor};"></span>
+                            <button class="delete-quote-item-btn p-1 text-red-400 hover:text-red-600 hover:bg-red-100 rounded-full" title="Xoá đơn hàng">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            }
+            renderColorPalettes();
+        }
 
-/* Tabs */
-$('.tab[data-tab="compose"]').onclick=()=>switchTab('compose');
-$('.tab[data-tab="settings"]').onclick=()=>switchTab('settings');
-$('.tab[data-tab="preview"]').onclick=()=>{switchTab('preview'); buildQuote()};
-function switchTab(id){$$('.tab').forEach(t=>t.classList.toggle('act',t.dataset.tab===id)); $$('section').forEach(s=>s.classList.toggle('act',s.id===id));}
+        function renderColorPalettes() {
+            const activeQuoteColor = getActiveQuote()?.statusColor || (globalState.statusLabels[0]?.color || '#868e96');
 
-/* Buttons */
-$('#btnAddNhi').onclick=()=>addRow({group:'nhí',mPerRun:0.31,imgPerRun:16,demand:0});
-$('#btnAddDai').onclick=()=>addRow({group:'đại',mPerRun:0.39,imgPerRun:13,demand:0});
-$('#btnAdd').onclick=()=>addRow();
-$('#btnExport').onclick=exportPDF;
+            DOM.statusColorSetter.innerHTML = globalState.statusLabels.map(({color, name}) => `
+                <button class="color-swatch ${color === activeQuoteColor ? 'active' : ''}" style="background-color: ${color};" data-color="${color}" title="${name}"></button>
+            `).join('');
 
-/* Tổng động khi đổi các trường header */
-['#donGia','#phiTk','#phiVc','#khach','#soBg','#ghiChu','#maHang','#ngay','#sdt'].forEach(s=>{
-  $(s).addEventListener('input',calc);
-});
+            DOM.statusColorFilter.innerHTML = `
+                <button class="px-3 py-1 text-sm rounded-full ${globalState.activeColorFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}" data-color="all">Tất cả</button>
+                ${globalState.statusLabels.map(({color, name}) => `
+                    <button class="color-swatch ${color === globalState.activeColorFilter ? 'active' : ''}" style="background-color: ${color};" data-color="${color}" title="${name}"></button>
+                `).join('')}
+            `;
+        }
 
-/* Khởi tạo */
-addRow({group:'nhí',mPerRun:0.31,imgPerRun:16,demand:0});
-calc();
-</script>
+        function calculateAndRenderStatistics() {
+            const allQuotes = Object.values(globalState.quotes);
+            if (!allQuotes.length) {
+                DOM.statsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">Chưa có dữ liệu thống kê.</p>';
+                return;
+            }
+
+            const totalQuotes = allQuotes.length;
+            const totalRevenue = allQuotes.reduce((sum, q) => sum + (q.summary?.totalPrice || 0), 0);
+            const totalMeters = allQuotes.reduce((sum, q) => sum + (q.summary?.totalMeters || 0), 0);
+            
+            const statusCounts = allQuotes.reduce((counts, q) => {
+                const color = q.statusColor || globalState.statusLabels[0].color;
+                counts[color] = (counts[color] || 0) + 1;
+                return counts;
+            }, {});
+
+            DOM.statsContainer.innerHTML = `
+                <div class="text-center p-2 bg-gray-50 rounded-lg">
+                    <div class="text-xs text-gray-500">Tổng đơn</div>
+                    <div class="text-xl font-bold">${totalQuotes}</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 rounded-lg">
+                    <div class="text-xs text-gray-500">Tổng doanh thu</div>
+                    <div class="text-xl font-bold">${formatCurrency(totalRevenue)}</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 rounded-lg">
+                    <div class="text-xs text-gray-500">Tổng mét in</div>
+                    <div class="text-xl font-bold">${totalMeters.toFixed(3)}</div>
+                </div>
+                <div class="p-2 bg-gray-50 rounded-lg col-span-2 md:col-span-1">
+                    <div class="text-xs text-center text-gray-500 mb-1">Phân loại</div>
+                    <div class="flex flex-wrap justify-center gap-x-3 gap-y-1">
+                    ${globalState.statusLabels.map(({color, name}) => `
+                        <div class="flex items-center text-sm" title="${name}">
+                            <span class="option-color-dot" style="background-color: ${color};"></span>
+                            <span>${statusCounts[color] || 0}</span>
+                        </div>
+                    `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderSettings() {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            DOM.customerName.value = activeQuote.quoteInfo.customerName;
+            DOM.customerId.value = activeQuote.quoteInfo.customerId;
+            DOM.jobCode.value = activeQuote.quoteInfo.jobCode;
+            DOM.unitPrice.value = activeQuote.settings.unitPrice;
+            DOM.designFee.value = activeQuote.settings.designFee;
+            DOM.shippingFee.value = activeQuote.settings.shippingFee;
+            DOM.quoteNotes.value = activeQuote.settings.quoteNotes;
+            DOM.optimizeLastRun.checked = activeQuote.settings.optimizeLastRun;
+            DOM.hideImagesInQuote.checked = activeQuote.settings.hideImagesInQuote;
+            DOM.hideUnitPriceInQuote.checked = activeQuote.settings.hideUnitPriceInQuote;
+            DOM.hideDesignFeeInQuote.checked = activeQuote.settings.hideDesignFeeInQuote;
+            DOM.hideShippingFeeInQuote.checked = activeQuote.settings.hideShippingFeeInQuote;
+            DOM.logoPreview.src = activeQuote.quoteInfo.logoDataUrl || "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+            DOM.removeLogoBtn.classList.toggle('hidden', !activeQuote.quoteInfo.logoDataUrl);
+        }
+        
+        function createRowElement(row) {
+            const rowElement = DOM.layoutRowTemplate.content.cloneNode(true).firstElementChild;
+            rowElement.dataset.id = row.id;
+            rowElement.querySelector('[data-field="name"]').value = row.name;
+            rowElement.querySelector('[data-field="color"]').value = row.color;
+            rowElement.querySelector('[data-field="mPerRun"]').value = row.mPerRun;
+            rowElement.querySelector('[data-field="imgPerRun"]').value = row.imgPerRun;
+            rowElement.querySelector('[data-field="demand"]').value = row.demand;
+            updateRowOutputs(rowElement, row);
+            return rowElement;
+        }
+
+        function updateRowOutputs(rowElement, rowData) {
+            rowElement.querySelector('[data-output="runs"]').textContent = rowData.runs || 0;
+            rowElement.querySelector('[data-output="totalMeters"]').textContent = (rowData.totalMeters || 0).toFixed(3);
+            rowElement.querySelector('[data-output="subtotal"]').textContent = formatCurrency(rowData.subtotal);
+            const surplusEl = rowElement.querySelector('[data-output="surplus"]');
+            surplusEl.textContent = rowData.surplus || 0;
+            surplusEl.classList.toggle('text-red-600', (rowData.surplus || 0) < 0);
+            surplusEl.classList.toggle('text-green-600', (rowData.surplus || 0) >= 0);
+
+            const imagePreviewsContainer = rowElement.querySelector('.image-previews');
+            imagePreviewsContainer.innerHTML = '';
+            (rowData.images || []).forEach((imgDataUrl, imgIndex) => {
+                const imgWrapper = document.createElement('div');
+                imgWrapper.className = 'relative w-16 h-16';
+                imgWrapper.innerHTML = `
+                    <img src="${imgDataUrl}" class="w-full h-full object-cover rounded-lg">
+                    <button data-img-index="${imgIndex}" class="remove-image-btn absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">&times;</button>`;
+                imagePreviewsContainer.appendChild(imgWrapper);
+            });
+            rowElement.querySelector('.upload-btn-wrapper').classList.toggle('hidden', (rowData.images || []).length >= 3);
+        }
+        
+        function renderLayouts() {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) {
+                DOM.layoutsContainer.innerHTML = '';
+                return;
+            };
+            
+            DOM.layoutsContainer.innerHTML = ''; // Simple re-render
+            activeQuote.layouts.forEach(row => {
+                 DOM.layoutsContainer.appendChild(createRowElement(row));
+            });
+        }
+
+        function renderSummary() {
+            const summary = getActiveQuote()?.summary || {};
+            DOM.totalMeters.textContent = (summary.totalMeters || 0).toFixed(3);
+            DOM.avgPricePerImage.textContent = formatCurrency(summary.avgPricePerImage);
+            DOM.totalPrice.textContent = formatCurrency(summary.totalPrice);
+        }
+        
+        function renderLabelManager() {
+            DOM.labelListContainer.innerHTML = globalState.statusLabels.map((label, index) => `
+                <div class="flex items-center justify-between p-2 bg-white rounded-lg border">
+                    <div class="flex items-center gap-3">
+                        <span class="option-color-dot" style="background-color: ${label.color}; width: 20px; height: 20px;"></span>
+                        <span class="font-medium">${label.name}</span>
+                    </div>
+                    ${index > 0 ? // Don't allow deleting the first (default) label
+                        `<button class="delete-label-btn p-1 text-red-400 hover:text-red-600 hover:bg-red-100 rounded-full" data-color="${label.color}" title="Xoá nhãn">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>` : ''
+                    }
+                </div>
+            `).join('');
+        }
+
+
+        // --- EVENT HANDLERS ---
+        function attachGlobalEventListeners() {
+            DOM.newQuoteBtn.addEventListener('click', () => handleNewQuote(true));
+
+            DOM.quoteListContainer.addEventListener('click', e => {
+                const item = e.target.closest('[data-quote-id]');
+                if (!item) return;
+
+                if (e.target.closest('.delete-quote-item-btn')) {
+                    e.stopPropagation(); // prevent selection
+                    handleDeleteQuote(item.dataset.quoteId);
+                } else {
+                    handleSelectQuote(item.dataset.quoteId);
+                }
+            });
+
+            DOM.statusColorSetter.addEventListener('click', handleSetStatusColor);
+            DOM.statusColorFilter.addEventListener('click', handleFilterByColor);
+            
+            DOM.addRowBtn.addEventListener('click', handleAddRow);
+            
+            DOM.addLabelForm.addEventListener('submit', handleAddLabel);
+            DOM.labelListContainer.addEventListener('click', e => {
+                if (e.target.closest('.delete-label-btn')) {
+                    const color = e.target.closest('.delete-label-btn').dataset.color;
+                    handleDeleteLabel(color);
+                }
+            });
+
+            ['customerName', 'customerId', 'jobCode'].forEach(key => {
+                DOM[key].addEventListener('input', e => {
+                    const activeQuote = getActiveQuote();
+                    if (!activeQuote) return;
+                    activeQuote.quoteInfo[key] = e.target.value;
+                    if(key === 'customerName' || key === 'jobCode') renderQuoteManager();
+                    saveState();
+                });
+            });
+
+            ['unitPrice', 'designFee', 'shippingFee', 'quoteNotes'].forEach(key => {
+                DOM[key].addEventListener('input', e => {
+                    const activeQuote = getActiveQuote();
+                    if (!activeQuote) return;
+                    activeQuote.settings[key] = e.target.value;
+                    calculateAndUpdateSummary();
+                });
+            });
+
+            ['optimizeLastRun', 'hideImagesInQuote', 'hideUnitPriceInQuote', 'hideDesignFeeInQuote', 'hideShippingFeeInQuote'].forEach(key => {
+                 DOM[key].addEventListener('change', e => {
+                    const activeQuote = getActiveQuote();
+                    if (!activeQuote) return;
+                    activeQuote.settings[key] = e.target.checked;
+                    saveAndRecalculate();
+                });
+            });
+
+            DOM.logoUpload.addEventListener('change', handleLogoUpload);
+            DOM.removeLogoBtn.addEventListener('click', handleRemoveLogo);
+            DOM.printQuoteBtn.addEventListener('click', handleGenerateImage);
+            
+            DOM.layoutsContainer.addEventListener('input', handleLayoutContainerInput);
+            DOM.layoutsContainer.addEventListener('change', handleLayoutContainerChange);
+            DOM.layoutsContainer.addEventListener('click', handleLayoutContainerClick);
+        }
+
+        function handleNewQuote(shouldSave = true) {
+            const newId = `quote_${Date.now()}`;
+            const newQuote = createDefaultQuote(newId);
+            globalState.quotes[newId] = newQuote;
+            globalState.activeQuoteId = newId;
+            globalState.activeColorFilter = 'all'; // Reset filter to show the new quote
+            if (shouldSave) {
+                 saveAndRecalculate();
+            } else {
+                 calculateAll();
+                 render();
+            }
+        }
+        
+        function handleDeleteQuote(quoteIdToDelete) {
+            const quote = globalState.quotes[quoteIdToDelete];
+            if (!quote) return;
+            const customerName = quote.quoteInfo.customerName || 'Khách lẻ';
+            if (!confirm(`Bạn có chắc chắn muốn xoá đơn hàng của "${customerName}" không?`)) return;
+
+            delete globalState.quotes[quoteIdToDelete];
+            
+            if (globalState.activeQuoteId === quoteIdToDelete) {
+                const remainingIds = Object.keys(globalState.quotes);
+                if (remainingIds.length > 0) {
+                    const visibleQuotes = Object.values(globalState.quotes)
+                        .filter(q => globalState.activeColorFilter === 'all' || q.statusColor === globalState.activeColorFilter)
+                        .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    globalState.activeQuoteId = (visibleQuotes.length > 0 ? visibleQuotes[0].id : remainingIds[0]) || null;
+                } else {
+                    globalState.activeQuoteId = null;
+                }
+            }
+
+            if (!globalState.activeQuoteId && Object.keys(globalState.quotes).length === 0) {
+                handleNewQuote(false);
+            }
+            saveAndRecalculate();
+        }
+
+        function handleSelectQuote(quoteId) {
+            globalState.activeQuoteId = quoteId;
+            calculateAll();
+            render();
+        }
+        
+        function handleSetStatusColor(e) {
+            if (e.target.matches('.color-swatch')) {
+                const color = e.target.dataset.color;
+                const activeQuote = getActiveQuote();
+                if (activeQuote) {
+                    activeQuote.statusColor = color;
+                    saveAndRecalculate(); // Full recalc to update list and stats
+                }
+            }
+        }
+
+        function handleFilterByColor(e) {
+            const button = e.target.closest('[data-color]');
+            if (button) {
+                const color = button.dataset.color;
+                globalState.activeColorFilter = color;
+                renderQuoteManager();
+            }
+        }
+
+        function handleLayoutContainerInput(e) {
+            if (e.target.matches('input[data-field]')) {
+                const rowElement = e.target.closest('.layout-row');
+                const id = parseInt(rowElement.dataset.id);
+                handleRowInputChange(id, e.target.dataset.field, e.target.value, rowElement);
+            }
+        }
+        
+        function handleLayoutContainerChange(e) {
+            if (e.target.matches('input[type="file"]')) {
+                const rowElement = e.target.closest('.layout-row');
+                const id = parseInt(rowElement.dataset.id);
+                handleImageUpload(id, e.target.files);
+                e.target.value = ''; // Reset file input
+            }
+        }
+
+        function handleLayoutContainerClick(e) {
+            const rowElement = e.target.closest('.layout-row');
+            if (!rowElement) return;
+            const id = parseInt(rowElement.dataset.id);
+
+            if (e.target.closest('.remove-row-btn')) {
+                handleRemoveRow(id);
+            } else if (e.target.closest('.remove-image-btn')) {
+                const imgIndex = parseInt(e.target.closest('.remove-image-btn').dataset.imgIndex);
+                handleRemoveImage(id, imgIndex);
+            }
+        }
+        
+        function handleAddLabel(e) {
+            e.preventDefault();
+            const name = DOM.newLabelName.value.trim();
+            const color = DOM.newLabelColor.value;
+            if (!name) {
+                alert('Vui lòng nhập tên nhãn.');
+                return;
+            }
+            if (globalState.statusLabels.some(label => label.color === color)) {
+                alert('Màu này đã được sử dụng. Vui lòng chọn màu khác.');
+                return;
+            }
+            globalState.statusLabels.push({ color, name });
+            DOM.newLabelName.value = '';
+            saveAndRecalculate();
+        }
+
+        function handleDeleteLabel(colorToDelete) {
+            if (colorToDelete === globalState.statusLabels[0]?.color) {
+                alert('Không thể xoá nhãn mặc định.');
+                return;
+            }
+
+            const label = globalState.statusLabels.find(l => l.color === colorToDelete);
+            if (!label) return;
+
+            if (!confirm(`Bạn có chắc chắn muốn xoá nhãn "${label.name}" không? Các đơn hàng đang dùng nhãn này sẽ được chuyển về "Mặc định".`)) return;
+
+            const defaultColor = globalState.statusLabels[0].color;
+            Object.values(globalState.quotes).forEach(quote => {
+                if (quote.statusColor === colorToDelete) {
+                    quote.statusColor = defaultColor;
+                }
+            });
+
+            if (globalState.activeColorFilter === colorToDelete) {
+                globalState.activeColorFilter = 'all';
+            }
+            globalState.statusLabels = globalState.statusLabels.filter(l => l.color !== colorToDelete);
+            saveAndRecalculate();
+        }
+
+
+        function handleAddRow() {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            activeQuote.layouts.push({ id: Date.now(), name: '', color: '', mPerRun: '', imgPerRun: '', demand: '', images: [] });
+            saveAndRecalculate();
+        }
+        
+        function handleRemoveRow(id) {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            activeQuote.layouts = activeQuote.layouts.filter(row => row.id !== id);
+            saveAndRecalculate();
+        }
+
+        function handleRowInputChange(id, field, value, rowElement) {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            const row = activeQuote.layouts.find(r => r.id === id);
+            if (row) {
+                 row[field] = value;
+                 calculateAll();
+                 updateRowOutputs(rowElement, row);
+                 renderSummary();
+                 calculateAndRenderStatistics();
+                 renderQuoteManager(); // Update totals in the list view
+                 saveState();
+            }
+        }
+        
+        async function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            const activeQuote = getActiveQuote();
+            if (file && activeQuote) {
+                activeQuote.quoteInfo.logoDataUrl = await fileToBase64(file);
+                saveAndRecalculate();
+            }
+        }
+
+        function handleRemoveLogo() {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            activeQuote.quoteInfo.logoDataUrl = '';
+            saveAndRecalculate();
+        }
+        
+        async function handleImageUpload(id, files) {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            const row = activeQuote.layouts.find(r => r.id === id);
+            if (!row || !files) return;
+            row.images = row.images || [];
+            const filesToProcess = Array.from(files).slice(0, 3 - row.images.length);
+            for(const file of filesToProcess) {
+                row.images.push(await fileToBase64(file));
+            }
+            saveAndRecalculate();
+        }
+
+        function handleRemoveImage(id, imgIndex) {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+            const row = activeQuote.layouts.find(r => r.id === id);
+            if (row && row.images) {
+                row.images.splice(imgIndex, 1);
+                saveAndRecalculate();
+            }
+        }
+
+        function saveAndRecalculate() {
+            calculateAll();
+            render();
+            saveState();
+        }
+
+        function calculateAndUpdateSummary() {
+            calculateAll();
+            renderSummary();
+            calculateAndRenderStatistics();
+            renderQuoteManager();
+            saveState();
+        }
+        
+        // --- EXPORT & PRINT ---
+        async function handleGenerateImage() {
+            const activeQuote = getActiveQuote();
+            if (!activeQuote) return;
+
+            DOM.printQuoteBtn.disabled = true;
+            DOM.printQuoteBtn.textContent = 'Đang xử lý...';
+            
+            calculateAll();
+            preparePrintableQuote();
+
+            DOM.printableQuote.classList.remove('hidden');
+
+            try {
+                const canvas = await html2canvas(DOM.printableQuote, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                const link = document.createElement('a');
+                const jobCode = activeQuote.quoteInfo.jobCode || 'bao-gia';
+                const customerName = activeQuote.quoteInfo.customerName || 'khach-le';
+                link.download = `bao-gia-${customerName.replace(/[\s\W]+/g, '-').toLowerCase()}-${jobCode}.png`;
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Đã có lỗi xảy ra khi tạo ảnh báo giá.');
+            } finally {
+                DOM.printableQuote.classList.add('hidden');
+                DOM.printQuoteBtn.disabled = false;
+                DOM.printQuoteBtn.textContent = 'Tải Báo giá (PNG)';
+            }
+        }
+
+        function preparePrintableQuote() {
+            const { quoteInfo, settings, layouts, summary = {} } = getActiveQuote();
+            DOM.printDate.textContent = new Date().toLocaleDateString('vi-VN');
+            DOM.printJobCode.textContent = quoteInfo.jobCode || 'N/A';
+            DOM.printCustomerName.textContent = quoteInfo.customerName || 'Khách lẻ';
+            DOM.printCustomerId.textContent = quoteInfo.customerId || 'N/A';
+            DOM.printLogo.src = quoteInfo.logoDataUrl;
+            DOM.printLogo.classList.toggle('hidden', !quoteInfo.logoDataUrl);
+
+            DOM.printableQuote.classList.toggle('hide-unit-price', settings.hideUnitPriceInQuote);
+            DOM.printableQuote.querySelectorAll('.image-col-print').forEach(el => el.classList.toggle('hidden', settings.hideImagesInQuote));
+            
+            DOM.printTableBody.innerHTML = '';
+            layouts.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                const imagesHTML = settings.hideImagesInQuote ? `<td class="p-2 border border-gray-400 image-col-print hidden"></td>`
+                    : `<td class="p-2 border border-gray-400 image-col-print align-top"><div class="flex gap-1">${(row.images || []).map(src => `<img src="${src}" class="w-12 h-12 object-cover">`).join('')}</div></td>`;
+                
+                tr.innerHTML = `
+                    <td class="p-2 border border-gray-400 text-center">${index + 1}</td>
+                    <td class="p-2 border border-gray-400">${row.name}</td>
+                    <td class="p-2 border border-gray-400">${row.color || ''}</td>
+                    ${imagesHTML}
+                    <td class="p-2 border border-gray-400 text-right">${(parseFloat(String(row.mPerRun).replace(/,/g, '.')) || 0).toFixed(3)}</td>
+                    <td class="p-2 border border-gray-400 text-right">${row.imgPerRun || 0}</td>
+                    <td class="p-2 border border-gray-400 text-right">${row.demand || 0}</td>
+                    <td class="p-2 border border-gray-400 text-right">${row.runs || 0}</td>
+                    <td class="p-2 border border-gray-400 text-right">${(row.totalMeters || 0).toFixed(3)}</td>
+                    <td class="p-2 border border-gray-400 text-right unit-price-col-print">${formatCurrency(parseFloat(settings.unitPrice) || 0)}</td>
+                    <td class="p-2 border border-gray-400 text-right font-bold">${formatCurrency(row.subtotal)}</td>
+                    <td class="p-2 border border-gray-400 text-right">${row.surplus || 0}</td>
+                `;
+                DOM.printTableBody.appendChild(tr);
+            });
+
+            DOM.printTotalRuns.textContent = summary.totalRuns || 0;
+            DOM.printTotalMeters.textContent = (summary.totalMeters || 0).toFixed(3);
+            DOM.printTotalImages.textContent = summary.totalImagesProduced || 0;
+            DOM.printAvgPrice.textContent = formatCurrency(summary.avgPricePerImage);
+            
+            const designFee = parseFloat(String(settings.designFee).replace(/,/g, '.')) || 0;
+            DOM.printDesignFee.textContent = formatCurrency(designFee);
+            DOM.printDesignFeeRow.classList.toggle('hidden', designFee <= 0 || settings.hideDesignFeeInQuote);
+
+            const shippingFee = parseFloat(String(settings.shippingFee).replace(/,/g, '.')) || 0;
+            DOM.printShippingFee.textContent = formatCurrency(shippingFee);
+            DOM.printShippingFeeRow.classList.toggle('hidden', shippingFee <= 0 || settings.hideShippingFeeInQuote);
+            
+            DOM.printTotalPrice.textContent = formatCurrency(summary.totalPrice);
+            DOM.printNotes.textContent = settings.quoteNotes;
+        }
+
+        // --- INITIALIZATION ---
+        function init() {
+            loadState();
+            attachGlobalEventListeners();
+            saveAndRecalculate();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
