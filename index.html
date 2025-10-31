@@ -308,7 +308,28 @@
   const els = (s,r=document)=>Array.from(r.querySelectorAll(s));
   const uid = ()=> Math.random().toString(36).slice(2) + Date.now().toString(36);
   const nowISO = ()=> new Date().toISOString();
-  const parseNum = (v)=>{ if(typeof v==='number') return v; if(!v) return 0; v=String(v).replace(',','.'); const n=parseFloat(v); return isNaN(n)?0:n; };
+  // Cải tiến: Thêm format số khi nhập và thoát khỏi trường
+  const parseNum = (v)=>{ 
+    if(typeof v==='number') return v; 
+    if(!v) return 0; 
+    v=String(v).replace(/\./g, '').replace(',','.'); // Xóa dấu chấm (phân cách hàng nghìn) trước khi parse
+    const n=parseFloat(v); 
+    return isNaN(n)?0:n; 
+  };
+  const formatNum = (v)=> v > 0 ? fmt.format(Math.round(v)) : '';
+
+  // Bổ sung: Hàm Debounce để tối ưu nhập liệu
+  function debounce(func, timeout = 400) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+  const debouncedRecalcAndTouch = debounce((o) => {
+    touch(o); 
+    recalcAndRender();
+  });
 
   function save(){ localStorage.setItem(KEY, JSON.stringify({orders: state.orders, activeId: state.activeId})); }
   function load(){
@@ -393,9 +414,12 @@
     el('#customer').value = o.data.customer||'';
     el('#customerCode').value = o.data.customerCode||'';
     el('#productCode').value = o.data.productCode||'';
-    el('#unitPrice').value = o.data.unitPrice||'';
-    el('#designFee').value = o.data.designFee||0;
-    el('#shippingFee').value = o.data.shippingFee||0;
+    
+    // Cải tiến: Format số khi load
+    el('#unitPrice').value = formatNum(o.data.unitPrice||0);
+    el('#designFee').value = formatNum(o.data.designFee||0);
+    el('#shippingFee').value = formatNum(o.data.shippingFee||0);
+    
     el('#note').value = o.data.note||'';
     el('#label').value = o.data.label||'new';
     el('#headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
@@ -424,9 +448,10 @@
     colorText.value = r?.color||'';
     colorHex.value = r?.colorHex||'#ffffff';
     swatch.style.background = colorHex.value;
-    mper.value = r?.mper??'';
-    ipr.value = r?.ipr??'';
-    demand.value = r?.demand??'';
+    
+    mper.value = r?.mper > 0 ? String(r.mper) : ''; // Giữ số thập phân
+    ipr.value = r?.ipr > 0 ? String(r.ipr) : '';
+    demand.value = formatNum(r?.demand||0); // Format nhu cầu
 
     const onChange = ()=>{
       const o = activeOrder(); if (!o) return;
@@ -436,14 +461,24 @@
       row.group = group.value;
       row.color = colorText.value;
       row.colorHex = colorHex.value;
+      
+      // Lấy giá trị số thô (chưa format)
       row.mper = parseNum(mper.value);
       row.ipr = parseNum(ipr.value);
       row.demand = parseNum(demand.value);
+      
       o.data.rows[idx] = row;
-      touch(o); recalcAndRender();
+      // Cải tiến: Gọi Debounce thay vì touch() trực tiếp
+      debouncedRecalcAndTouch(o);
     };
     [name,group,colorText,mper,ipr,demand].forEach(inp=> inp.addEventListener('input', onChange));
     colorHex.addEventListener('input', ()=>{ swatch.style.background = colorHex.value; onChange(); });
+
+    // Bổ sung: Format lại khi thoát khỏi trường nhập liệu lớn (demand)
+    demand.addEventListener('blur', (e) => {
+        const val = parseNum(e.target.value);
+        e.target.value = formatNum(val);
+    });
 
     btnDel.addEventListener('click', ()=>{
       const o = activeOrder(); if (!o) return;
@@ -484,7 +519,7 @@
         <td style="display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${r.colorHex};border:1px solid #fff6"></span>${r.color}</td>
         <td style="text-align:center">${r.mper}</td>
         <td style="text-align:center">${r.ipr}</td>
-        <td style="text-align:center">${r.demand}</td>
+        <td style="text-align:center">${formatNum(r.demand)}</td>
         <td style="text-align:center">${r.runs}</td>
         <td style="text-align:center">${r.meters.toFixed(2)}</td>
         <td style="text-align:right;color:var(--neon)">${Intl.NumberFormat('vi-VN').format(Math.round(r.money))}</td>`;
@@ -492,7 +527,7 @@
     });
     document.getElementById('tRuns').textContent = o.totals.totalRuns;
     document.getElementById('tMeters').textContent = o.totals.totalMeters.toFixed(2);
-    document.getElementById('tDemand').textContent = o.totals.totalDemand;
+    document.getElementById('tDemand').textContent = formatNum(o.totals.totalDemand);
     document.getElementById('gNhiMeters').textContent = (o.totals.groupMeters.nhi||0).toFixed(2);
     document.getElementById('gDaiMeters').textContent = (o.totals.groupMeters.dai||0).toFixed(2);
     document.getElementById('tSubtotal').textContent = Intl.NumberFormat('vi-VN').format(Math.round(o.totals.subtotal));
@@ -539,6 +574,8 @@
           <button class="btn danger" style="padding:.35rem .5rem">X</button>
         </div>`;
       const input = d.querySelector('input');
+      // Cải tiến: Dùng Debounce cho việc đổi tên ảnh
+      input.addEventListener('input', debouncedRecalcAndTouch.bind(null, o)); 
       input.addEventListener('change', ()=>{ img.name = input.value; touch(o); recalcAndRender(); });
       d.querySelector('button').addEventListener('click', ()=>{
         o.data.images = o.data.images.filter(x=> x.id!==img.id);
@@ -618,16 +655,30 @@
   document.getElementById('sortOrders').addEventListener('change', renderOrderList);
 
   ['customer','customerCode','productCode','unitPrice','designFee','shippingFee','note','label'].forEach(id=>{
-    document.getElementById(id).addEventListener('input', ()=>{
+    document.getElementById(id).addEventListener('input', (e)=>{
       const o = activeOrder(); if (!o) return;
-      const v = document.getElementById(id).value;
-      if (['unitPrice','designFee','shippingFee'].includes(id)) o.data[id] = parseNum(v);
-      else o.data[id] = v;
-      if (id==='productCode') document.getElementById('pcode').textContent = v;
-      if (id==='customer'||id==='customerCode') document.getElementById('headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
-      if (id==='note') document.getElementById('tNote').textContent = v;
-      touch(o); recalcAndRender();
+      const v = e.target.value;
+      if (['unitPrice','designFee','shippingFee'].includes(id)) {
+        o.data[id] = parseNum(v);
+        // Cải tiến: Dùng Debounce
+        debouncedRecalcAndTouch(o);
+      } else {
+        o.data[id] = v;
+        // Cập nhật thông tin nhanh không cần Debounce
+        if (id==='productCode') document.getElementById('pcode').textContent = v;
+        if (id==='customer'||id==='customerCode') document.getElementById('headerLine').textContent = (o.data.customer||'') + ' • Mã KH: ' + (o.data.customerCode||'');
+        if (id==='note') document.getElementById('tNote').textContent = v;
+        touch(o); // Lưu trực tiếp cho các trường chữ
+      }
     });
+
+    // Bổ sung: Format số khi thoát khỏi trường nhập liệu lớn (Giá, Phí)
+    if (['unitPrice','designFee','shippingFee'].includes(id)){
+        document.getElementById(id).addEventListener('blur', (e) => {
+            const val = parseNum(e.target.value);
+            e.target.value = formatNum(val);
+        });
+    }
   });
 
   document.getElementById('btnAddPresetNhi').addEventListener('click', ()=> addRowUI({name:'Nhí 8cm', group:'nhi', color:'', colorHex:'#ffffff', mper:0.31, ipr:16, demand:0}));
